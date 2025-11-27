@@ -1,0 +1,20 @@
+*{
+    color: #fff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-shadow: rgba(1, 28, 64, 0.15); 
+    
+    
+
+}
+
+.App {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: linear-gradient(to right, #022859, #034AA6);
+    
+}
