@@ -1,4 +1,3 @@
-
 import {
   FaTruck,
   FaRoute,
@@ -6,10 +5,15 @@ import {
   FaGasPump,
   FaSignOutAlt,
   FaUserCircle,
+  FaChevronDown,
+  FaChevronUp,
 } from "react-icons/fa";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import "./Home.css";
 
 const Home = () => {
+  const [showSubmenu, setShowSubmenu] = useState(false);
   // Dados simulados para o dashboard
   const stats = [
     { title: "Total de Veículos", value: 45, icon: <FaTruck />, color: "blue" },
@@ -38,8 +42,38 @@ const Home = () => {
           <a href="#" className="active">
             Dashboard
           </a>
-          <a href="#">Veículos</a>
-          <a href="#">Motoristas</a>
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              setShowSubmenu(!showSubmenu);
+            }}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            Cadastrar
+            {showSubmenu ? (
+              <FaChevronUp size={12} />
+            ) : (
+              <FaChevronDown size={12} />
+            )}
+          </a>
+          {showSubmenu && (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                paddingLeft: "20px",
+                backgroundColor: "rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              <Link to="/cadastro-veiculo">Veículos</Link>
+              <a href="#">Motoristas</a>
+            </div>
+          )}
           <a href="#">Rotas</a>
           <a href="#">Manutenção</a>
           <a href="#">Relatórios</a>
