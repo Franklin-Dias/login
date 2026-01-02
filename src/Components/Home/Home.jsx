@@ -9,11 +9,13 @@ import {
   FaChevronUp,
 } from "react-icons/fa";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import CadastroVeiculo from "../Cadastro/CadastroVeiculo";
 import "./Home.css";
 
 const Home = () => {
   const [showSubmenu, setShowSubmenu] = useState(false);
+  const [activeView, setActiveView] = useState("dashboard");
+
   // Dados simulados para o dashboard
   const stats = [
     { title: "Total de Veículos", value: 45, icon: <FaTruck />, color: "blue" },
@@ -39,7 +41,11 @@ const Home = () => {
           <h2>Gestão de Frotas</h2>
         </div>
         <nav>
-          <a href="#" className="active">
+          <a
+            href="#"
+            className={activeView === "dashboard" ? "active" : ""}
+            onClick={() => setActiveView("dashboard")}
+          >
             Dashboard
           </a>
           <a
@@ -70,7 +76,15 @@ const Home = () => {
                 backgroundColor: "rgba(0, 0, 0, 0.1)",
               }}
             >
-              <Link to="/cadastro-veiculo">Veículos</Link>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setActiveView("cadastroVeiculo");
+                }}
+              >
+                Veículos
+              </a>
               <a href="#">Motoristas</a>
             </div>
           )}
@@ -82,70 +96,78 @@ const Home = () => {
       </aside>
 
       <main className="main-content">
-        <header className="topbar">
-          <h1>Visão Geral</h1>
-          <div className="user-info">
-            <span>Olá, Gestor</span>
-            <FaUserCircle className="avatar" />
-            <button className="logout-btn" title="Sair">
-              <FaSignOutAlt />
-            </button>
-          </div>
-        </header>
-
-        <div className="stats-grid">
-          {stats.map((stat, index) => (
-            <div key={index} className={`stat-card ${stat.color}`}>
-              <div className="stat-icon">{stat.icon}</div>
-              <div className="stat-details">
-                <h3>{stat.value}</h3>
-                <p>{stat.title}</p>
+        {activeView === "dashboard" && (
+          <>
+            <header className="topbar">
+              <h1>Visão Geral</h1>
+              <div className="user-info">
+                <span>Olá, Gestor</span>
+                <FaUserCircle className="avatar" />
+                <button className="logout-btn" title="Sair">
+                  <FaSignOutAlt />
+                </button>
               </div>
-            </div>
-          ))}
-        </div>
+            </header>
 
-        <section className="recent-activity">
-          <h2>Atividades Recentes</h2>
-          <div className="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>Veículo</th>
-                  <th>Motorista</th>
-                  <th>Status</th>
-                  <th>Horário</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>ABC-1234</td>
-                  <td>Carlos Silva</td>
-                  <td>
-                    <span className="badge success">Iniciou Rota</span>
-                  </td>
-                  <td>08:30</td>
-                </tr>
-                <tr>
-                  <td>XYZ-9876</td>
-                  <td>Ana Souza</td>
-                  <td>
-                    <span className="badge warning">Abastecimento</span>
-                  </td>
-                  <td>09:15</td>
-                </tr>
-                <tr>
-                  <td>DEF-5678</td>
-                  <td>Roberto Dias</td>
-                  <td>
-                    <span className="badge danger">Alerta de Motor</span>
-                  </td>
-                  <td>10:45</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
+            <div className="stats-grid">
+              {stats.map((stat, index) => (
+                <div key={index} className={`stat-card ${stat.color}`}>
+                  <div className="stat-icon">{stat.icon}</div>
+                  <div className="stat-details">
+                    <h3>{stat.value}</h3>
+                    <p>{stat.title}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <section className="recent-activity">
+              <h2>Atividades Recentes</h2>
+              <div className="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Veículo</th>
+                      <th>Motorista</th>
+                      <th>Status</th>
+                      <th>Horário</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>ABC-1234</td>
+                      <td>Carlos Silva</td>
+                      <td>
+                        <span className="badge success">Iniciou Rota</span>
+                      </td>
+                      <td>08:30</td>
+                    </tr>
+                    <tr>
+                      <td>XYZ-9876</td>
+                      <td>Ana Souza</td>
+                      <td>
+                        <span className="badge warning">Abastecimento</span>
+                      </td>
+                      <td>09:15</td>
+                    </tr>
+                    <tr>
+                      <td>DEF-5678</td>
+                      <td>Roberto Dias</td>
+                      <td>
+                        <span className="badge danger">Alerta de Motor</span>
+                      </td>
+                      <td>10:45</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </>
+        )}
+
+        {activeView === "cadastroVeiculo" && (
+          <CadastroVeiculo onCancel={() => setActiveView("dashboard")} />
+        )}
       </main>
     </div>
   );

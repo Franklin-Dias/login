@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./CadastroVeiculos.css";
 
-function CadastroVeiculo() {
+function CadastroVeiculo({ onCancel }) {
   const [placa, setPlaca] = useState("");
   const [modelo, setModelo] = useState("");
   const [ano, setAno] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -47,7 +49,24 @@ function CadastroVeiculo() {
             required
           />
         </div>
-        <button type="submit">Salvar</button>
+        <div className="button-group">
+          <button type="submit" className="save-btn">
+            Salvar
+          </button>
+          <button
+            type="button"
+            className="cancel-btn"
+            onClick={() => {
+              if (onCancel) {
+                onCancel();
+              } else {
+                navigate("/home");
+              }
+            }}
+          >
+            Cancelar
+          </button>
+        </div>
       </form>
     </div>
   );
