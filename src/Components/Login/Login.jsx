@@ -1,25 +1,30 @@
 import { FaUser, FaLock } from "react-icons/fa";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
 const Login = () => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        alert(`Username: ${username}, Password: ${password}`);
-    
-    };
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
+    if (!username || !password) {
+      alert("Por favor, preencha todos os campos.");
+      return;
+    }
+
+    navigate("/home");
+  };
 
   return (
     <div className="container">
-      <form onSubmit={handleSubmit}>
+      <form className="form-container" onSubmit={handleSubmit}>
         <h1>Acesse o Sistema</h1>
         <div className="input-field">
           <input
-            required
             type="email"
             placeholder="E-mail"
             onChange={(e) => setUsername(e.target.value)}
@@ -28,7 +33,6 @@ const Login = () => {
         </div>
         <div className="input-field">
           <input
-            required
             type="password"
             placeholder="Senha"
             onChange={(e) => setPassword(e.target.value)}

@@ -1,11 +1,19 @@
 .container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 450px;
   border: 1px solid rgba(3, 74, 166, 0.15);
   border-radius: 8px;
   background-color: rgba(191, 151, 101, 0.15);
-  background-filter: blur(10px);
+  backdrop-filter: blur(10px);
   padding: 40px;
   box-shadow: 2px 2px rgba(1, 28, 64, 0.2);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .container h1 {
