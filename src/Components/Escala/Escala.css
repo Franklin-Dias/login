@@ -1,12 +1,14 @@
 .escala-container {
   padding: 20px;
-  background-color: #f4f7fc;
+  background-color: #08401B;
   height: 100%;
   overflow-y: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
 }
 
 .escala-header h1 {
-  color: #333;
+  color: #fff;
   margin-bottom: 20px;
 }
 
@@ -18,17 +20,17 @@
 
 .escala-form-section,
 .escala-list-section {
-  background: white;
+  background: #132426;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.13);
 }
 
 .escala-form-section h2,
 .escala-list-section h2 {
   margin-bottom: 20px;
-  color: #444;
-  border-bottom: 2px solid #eee;
+  color: #fff;
+  border-bottom: 2px solid #05F26C;
   padding-bottom: 10px;
 }
 
@@ -49,20 +51,21 @@
 .form-group label {
   margin-bottom: 5px;
   font-weight: 500;
-  color: #666;
+  color: #fff;
 }
 
 .form-group input,
 .form-group textarea {
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #08401B;
   border-radius: 4px;
   font-size: 14px;
+  
 }
 
 .btn-escalar {
-  background-color: #28a745;
-  color: white;
+  background-color: #05F26C;
+  color: #132426;
   border: none;
   padding: 12px 24px;
   border-radius: 4px;
@@ -74,12 +77,13 @@
 }
 
 .btn-escalar:hover {
-  background-color: #218838;
+  background-color: #08401B;
+  color: #fff;
 }
 
 .btn-cancel {
-  background-color: #6c757d;
-  color: white;
+  background-color: #05F26C;
+  color: #132426;
   border: none;
   padding: 12px 24px;
   border-radius: 4px;
@@ -92,7 +96,8 @@
 }
 
 .btn-cancel:hover {
-  background-color: #5a6268;
+  background-color: #08401B;
+  color: #fff;
 }
 
 .action-btn {
@@ -129,12 +134,12 @@
 .escala-table td {
   padding: 12px;
   text-align: left;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #fff;
 }
 
 .escala-table th {
-  background-color: #f8f9fa;
-  color: #555;
+  background-color: #132426;
+  color: #fff;
   font-weight: 600;
 }
 
@@ -143,7 +148,7 @@
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #03A64A;
   padding-bottom: 10px;
   overflow-x: auto;
 }
@@ -151,22 +156,24 @@
 .tab-btn {
   padding: 10px 20px;
   border: none;
-  background: #e9ecef;
+  background: #132426;
   cursor: pointer;
   border-radius: 4px;
   font-weight: 500;
-  color: #555;
+  color: #fff;
   white-space: nowrap;
   transition: all 0.3s;
 }
 
 .tab-btn:hover {
-  background-color: #dee2e6;
+  background-color: #03A64A;
+  color: #132426;
+
 }
 
 .tab-btn.active {
-  background-color: #007bff;
-  color: white;
+  background-color: #05F26C;
+  color: #132426;
 }
 
 /* Status Badges */
@@ -199,17 +206,18 @@
   background: white;
   padding: 15px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
   flex: 1;
   text-align: center;
-  border-left: 5px solid #ccc;
+  border-left: 5px solid #fff;
   cursor: pointer;
   transition: all 0.2s ease;
+
 }
 
 .summary-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
 }
 
 .summary-card.selected {
@@ -221,20 +229,20 @@
   margin: 0;
   font-size: 24px;
   font-weight: bold;
-  color: #333;
+  color: #fff;
 }
 
 .summary-card p {
   margin: 5px 0 0;
-  color: #666;
+  color: #fff;
   font-size: 14px;
   font-weight: 500;
 }
 
-.summary-card.total { border-left-color: #6c757d; }
-.summary-card.pendente { border-left-color: #ffc107; }
-.summary-card.enviado { border-left-color: #007bff; }
-.summary-card.aceito { border-left-color: #28a745; }
+.summary-card.total {background-color:#132426; border-left-color: #6c757d; }
+.summary-card.pendente {background-color:#132426; border-left-color: #ffc107; }
+.summary-card.enviado {background-color:#132426; border-left-color: #007bff; }
+.summary-card.aceito {background-color:#132426; border-left-color: #28a745; }
 
 /* Contratos Actions */
 .contratos-actions {
@@ -244,8 +252,8 @@
 }
 
 .btn-new-contract {
-  background-color: #17a2b8;
-  color: white;
+  background-color: #05F26C;
+  color: #132426;
   border: none;
   padding: 8px 16px;
   border-radius: 4px;
@@ -253,10 +261,12 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-weight: 500;
-  transition: background-color 0.2s;
+  font-weight: 600;
+  transition: all 0.5s ease;
 }
 
 .btn-new-contract:hover {
-  background-color: #138496;
+  transform: translateY(-2px);
+  background-color: #132426;
+  color: #fff;
 }
