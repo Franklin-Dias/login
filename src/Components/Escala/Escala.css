@@ -1,0 +1,262 @@
+.escala-container {
+  padding: 20px;
+  background-color: #f4f7fc;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.escala-header h1 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.escala-content {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.escala-form-section,
+.escala-list-section {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.escala-form-section h2,
+.escala-list-section h2 {
+  margin-bottom: 20px;
+  color: #444;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #666;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.btn-escalar {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+}
+
+.btn-escalar:hover {
+  background-color: #218838;
+}
+
+.btn-cancel {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.btn-cancel:hover {
+  background-color: #5a6268;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 5px;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  font-size: 16px;
+}
+
+.edit-btn {
+  color: #007bff;
+}
+.edit-btn:hover {
+  background-color: #e7f1ff;
+}
+
+.delete-btn {
+  color: #dc3545;
+}
+.delete-btn:hover {
+  background-color: #f8d7da;
+}
+
+.escala-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.escala-table th,
+.escala-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.escala-table th {
+  background-color: #f8f9fa;
+  color: #555;
+  font-weight: 600;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  overflow-x: auto;
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  border: none;
+  background: #e9ecef;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: 500;
+  color: #555;
+  white-space: nowrap;
+  transition: all 0.3s;
+}
+
+.tab-btn:hover {
+  background-color: #dee2e6;
+}
+
+.tab-btn.active {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Status Badges */
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+  display: inline-block;
+}
+.status-badge.pendente { background-color: #ffeeba; color: #856404; }
+.status-badge.enviado { background-color: #b8daff; color: #004085; }
+.status-badge.aceito { background-color: #c3e6cb; color: #155724; }
+
+/* Action Buttons */
+.btn-whatsapp { color: #25d366; }
+.btn-whatsapp:hover { background-color: #e6fffa; }
+
+.btn-accept { color: #28a745; }
+.btn-accept:hover { background-color: #e6f9e6; }
+
+/* Summary Cards */
+.summary-cards {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.summary-card {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex: 1;
+  text-align: center;
+  border-left: 5px solid #ccc;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.summary-card.selected {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.summary-card h3 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.summary-card p {
+  margin: 5px 0 0;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.summary-card.total { border-left-color: #6c757d; }
+.summary-card.pendente { border-left-color: #ffc107; }
+.summary-card.enviado { border-left-color: #007bff; }
+.summary-card.aceito { border-left-color: #28a745; }
+
+/* Contratos Actions */
+.contratos-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.btn-new-contract {
+  background-color: #17a2b8;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.btn-new-contract:hover {
+  background-color: #138496;
+}

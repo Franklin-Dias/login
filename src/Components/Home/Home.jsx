@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import { useState } from "react";
 import CadastroVeiculo from "../Cadastro/CadastroVeiculo";
+import Escala from "../Escala/Escala";
 import "./Home.css";
 
 const Home = () => {
@@ -88,7 +89,17 @@ const Home = () => {
               <a href="#">Motoristas</a>
             </div>
           )}
-          <a href="#">Rotas</a>
+          <a
+            href="#"
+            className={activeView === "escala" ? "active" : ""}
+            onClick={(e) => {
+              e.preventDefault();
+              setActiveView("escala");
+            }}
+          >
+            Escala
+          </a>
+          <a href="#">Lista de Descarga</a>
           <a href="#">Manutenção</a>
           <a href="#">Relatórios</a>
           <a href="#">Configurações</a>
@@ -168,6 +179,8 @@ const Home = () => {
         {activeView === "cadastroVeiculo" && (
           <CadastroVeiculo onCancel={() => setActiveView("dashboard")} />
         )}
+
+        {activeView === "escala" && <Escala />}
       </main>
     </div>
   );
