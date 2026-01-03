@@ -3,15 +3,15 @@
   min-height: 100vh;
   max-weight: 100%;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f4f7f6;
-  color: #333;
+  background-color: #08401B;
+  color: #fff;
 }
 
 /* Sidebar */
 .sidebar {
   width: 250px;
-  background-color: #2c3e50;
-  color: #ecf0f1;
+  background-color: #132426;
+  color: #fff;
   display: flex;
   flex-direction: column;
 }
@@ -19,7 +19,7 @@
 .sidebar-header {
   padding: 20px;
   text-align: center;
-  border-bottom: 1px solid #34495e;
+  border-bottom: 1px solid #0A5926;
 }
 
 .sidebar nav {
@@ -30,16 +30,16 @@
 
 .sidebar nav a {
   padding: 15px 20px;
-  color: #bdc3c7;
+  color: #fff;
   text-decoration: none;
   transition: 0.3s;
 }
 
 .sidebar nav a:hover,
 .sidebar nav a.active {
-  background-color: #34495e;
+  background-color: #0A5926;
   color: #fff;
-  border-left: 4px solid #3498db;
+  border-left: 4px solid #03A64A;
 }
 
 /* Main Content */
@@ -54,16 +54,16 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
-  background: #fff;
+  background: #132426;
   padding: 15px 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
 }
 
 .topbar h1 {
   margin: 0;
   font-size: 1.5rem;
-  color: #2c3e50;
+  color: #fff;
 }
 
 .user-info {
@@ -74,13 +74,13 @@
 
 .avatar {
   font-size: 1.5rem;
-  color: #7f8c8d;
+  color: #05F26C;
 }
 
 .logout-btn {
   background: none;
   border: none;
-  color: #e74c3c;
+  color: #05F26C;
   font-size: 1.2rem;
   cursor: pointer;
 }
@@ -94,10 +94,10 @@
 }
 
 .stat-card {
-  background: #fff;
+  background: #132426;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
   display: flex;
   align-items: center;
   gap: 20px;
@@ -113,20 +113,20 @@
 }
 
 .stat-card.blue .stat-icon {
-  background: #ebf5fb;
-  color: #3498db;
+  background: #08401B;
+  color: #fff;
 }
 .stat-card.green .stat-icon {
-  background: #e9f7ef;
-  color: #2ecc71;
+  background: #08401B;
+  color: #fff;
 }
 .stat-card.orange .stat-icon {
-  background: #fef5e7;
-  color: #f39c12;
+  background: #08401B;
+  color: #fff;
 }
 .stat-card.red .stat-icon {
-  background: #fdedec;
-  color: #e74c3c;
+   background: #08401B;
+  color: #fff;
 }
 
 .stat-details h3 {
@@ -137,23 +137,23 @@
 
 .stat-details p {
   margin: 5px 0 0;
-  color: #7f8c8d;
+  color: #fff;
   font-size: 0.9rem;
 }
 
 /* Recent Activity Table */
 .recent-activity {
-  background: #fff;
+  background: #132426;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
 }
 
 .recent-activity h2 {
   margin-top: 0;
   margin-bottom: 20px;
   font-size: 1.2rem;
-  color: #2c3e50;
+  color: #fff;
 }
 
 .table-container {
@@ -169,11 +169,11 @@ th,
 td {
   padding: 12px 15px;
   text-align: left;
-  border-bottom: 1px solid #ecf0f1;
+  border-bottom: 1px solid #03A64A;
 }
 
 th {
-  color: #7f8c8d;
+  color: #fff;
   font-weight: 600;
 }
 
@@ -185,14 +185,14 @@ th {
 }
 
 .badge.success {
-  background: #e9f7ef;
-  color: #2ecc71;
+  background: #08401B;
+  color: #05F26C;
 }
 .badge.warning {
-  background: #fef5e7;
+  background: #08401B;
   color: #f39c12;
 }
 .badge.danger {
-  background: #fdedec;
+  background:#08401B;
   color: #e74c3c;
 }

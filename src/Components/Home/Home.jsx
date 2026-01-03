@@ -90,7 +90,7 @@ const Home = () => {
             </div>
           )}
           <a
-            href="#"
+            href="./Escala/Escala.jsx"
             className={activeView === "escala" ? "active" : ""}
             onClick={(e) => {
               e.preventDefault();
