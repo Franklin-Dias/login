@@ -63,6 +63,12 @@ function Escala() {
     status: "Pendente",
   });
 
+  // Estado para a lista de conjuntos
+  const [conjuntos] = useState(() => {
+    const saved = localStorage.getItem("conjuntos");
+    return saved ? JSON.parse(saved) : [];
+  });
+
   // Estado para controlar qual item está sendo editado
   const [editingId, setEditingId] = useState(null);
 
@@ -117,6 +123,21 @@ function Escala() {
       setFormData({ ...formData, [name]: v });
     } else {
       setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  const handleConjuntoChange = (e) => {
+    const conjuntoId = e.target.value;
+    if (conjuntoId) {
+      const selectedConjunto = conjuntos.find(c => c.id.toString() === conjuntoId);
+      if (selectedConjunto) {
+        setFormData(prevData => ({
+          ...prevData,
+          motorista: selectedConjunto.motoristaTitular,
+          cavalo: selectedConjunto.placaCavalo,
+          carreta: selectedConjunto.placaCarreta,
+        }));
+      }
     }
   };
 
@@ -346,6 +367,28 @@ Por favor, confirme o recebimento.`;
         <section className="escala-form-section">
           <h2>{editingId ? "Editar Escala" : "Nova Escala"}</h2>
           <form onSubmit={handleSubmit} className="escala-form">
+            <div className="form-row">
+              <div className="form-group">
+                <label>Selecionar Conjunto (Opcional)</label>
+                <select onChange={handleConjuntoChange}>
+                  <option value="">Puxar conjunto automático</option>
+                  {conjuntos.map(c => (
+                    <option key={c.id} value={c.id}>
+                      {c.placaCavalo} / {c.placaCarreta} - {c.motoristaTitular}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div
+              style={{
+                borderTop: "1px solid #eee",
+                margin: "20px 0",
+                paddingTop: "20px",
+              }}
+            ></div>
+
             <div className="form-row">
               <div className="form-group">
                 <label>Contrato / Cliente</label>
