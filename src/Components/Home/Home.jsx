@@ -10,8 +10,14 @@ import {
 } from "react-icons/fa";
 import { useState } from "react";
 import CadastroVeiculo from "../Cadastro/CadastroVeiculo";
+import CadastroMotorista from "../Cadastro/CadastroMotorista";
+import CadastroConjunto from "../Cadastro/CadastroConjunto";
+import DetalhesMotorista from "../Cadastro/DetalhesMotorista";
 import Escala from "../Escala/Escala";
+import ListadeDescarga from "../ListadeDescarga/ListadeDescarga";
+import Placas from "../Placas/Placas";
 import "./Home.css";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [showSubmenu, setShowSubmenu] = useState(false);
@@ -86,11 +92,28 @@ const Home = () => {
               >
                 Veículos
               </a>
-              <a href="#">Motoristas</a>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setActiveView("cadastroMotorista");
+                }}
+              >
+                Cadastrar Motorista
+              </a>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setActiveView("cadastroConjunto");
+                }}
+              >
+                Conjunto
+              </a>
             </div>
           )}
           <a
-            href="./Escala/Escala.jsx"
+            href="#"
             className={activeView === "escala" ? "active" : ""}
             onClick={(e) => {
               e.preventDefault();
@@ -99,7 +122,26 @@ const Home = () => {
           >
             Escala
           </a>
-          <a href="#">Lista de Descarga</a>
+          <a
+            href="#"
+            className={activeView === "placas" ? "active" : ""}
+            onClick={(e) => {
+              e.preventDefault();
+              setActiveView("placas");
+            }}
+          >
+            Placas
+          </a>
+          <a
+            href="#"
+            className={activeView === "listaDescarga" ? "active" : ""}
+            onClick={(e) => {
+              e.preventDefault();
+              setActiveView("listaDescarga");
+            }}
+          >
+            Lista de Descarga
+          </a>
           <a href="#">Manutenção</a>
           <a href="#">Relatórios</a>
           <a href="#">Configurações</a>
@@ -180,7 +222,21 @@ const Home = () => {
           <CadastroVeiculo onCancel={() => setActiveView("dashboard")} />
         )}
 
+        {activeView === "cadastroMotorista" && (
+          <CadastroMotorista onCancel={() => setActiveView("dashboard")} />
+        )}
+
+        {activeView === "cadastroConjunto" && (
+          <CadastroConjunto onCancel={() => setActiveView("dashboard")} />
+        )}
+
+        {activeView === "detalhesMotorista" && <DetalhesMotorista />}
+
         {activeView === "escala" && <Escala />}
+
+        {activeView === "placas" && <Placas />}
+
+        {activeView === "listaDescarga" && <ListadeDescarga />}
       </main>
     </div>
   );

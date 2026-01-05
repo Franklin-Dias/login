@@ -1,0 +1,50 @@
+.placas-container {
+  padding: 20px;
+  background-color: #132426;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  margin-top: 20px;
+}
+
+.placas-container h2 {
+  color: #fff;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #03A64A;
+  padding-bottom: 10px;
+}
+
+.placas-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.placas-table th,
+.placas-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #03A64A;
+}
+
+.placas-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #132426;
+}
+
+.badge {
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: bold;
+  display: inline-block;
+}
+
+.badge.success {
+  background-color: #05F26C;
+  color: #132426;
+}
+
+.badge.warning {
+  background-color: #fff3cd;
+  color: #856404;
+}

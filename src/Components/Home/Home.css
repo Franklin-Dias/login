@@ -1,9 +1,9 @@
 .home-container {
   display: flex;
   min-height: 100vh;
-  max-weight: 100%;
+  max-width: 100%;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #08401B;
+  background-color: #08401b;
   color: #fff;
 }
 
@@ -19,7 +19,7 @@
 .sidebar-header {
   padding: 20px;
   text-align: center;
-  border-bottom: 1px solid #0A5926;
+  border-bottom: 1px solid #0a5926;
 }
 
 .sidebar nav {
@@ -37,9 +37,9 @@
 
 .sidebar nav a:hover,
 .sidebar nav a.active {
-  background-color: #0A5926;
+  background-color: #0a5926;
   color: #fff;
-  border-left: 4px solid #03A64A;
+  border-left: 4px solid #03a64a;
 }
 
 /* Main Content */
@@ -74,13 +74,13 @@
 
 .avatar {
   font-size: 1.5rem;
-  color: #05F26C;
+  color: #05f26c;
 }
 
 .logout-btn {
   background: none;
   border: none;
-  color: #05F26C;
+  color: #05f26c;
   font-size: 1.2rem;
   cursor: pointer;
 }
@@ -113,19 +113,19 @@
 }
 
 .stat-card.blue .stat-icon {
-  background: #08401B;
+  background: #08401b;
   color: #fff;
 }
 .stat-card.green .stat-icon {
-  background: #08401B;
+  background: #08401b;
   color: #fff;
 }
 .stat-card.orange .stat-icon {
-  background: #08401B;
+  background: #08401b;
   color: #fff;
 }
 .stat-card.red .stat-icon {
-   background: #08401B;
+  background: #08401b;
   color: #fff;
 }
 
@@ -169,7 +169,7 @@ th,
 td {
   padding: 12px 15px;
   text-align: left;
-  border-bottom: 1px solid #03A64A;
+  border-bottom: 1px solid #03a64a;
 }
 
 th {
@@ -185,14 +185,14 @@ th {
 }
 
 .badge.success {
-  background: #08401B;
-  color: #05F26C;
+  background: #08401b;
+  color: #05f26c;
 }
 .badge.warning {
-  background: #08401B;
+  background: #08401b;
   color: #f39c12;
 }
 .badge.danger {
-  background:#08401B;
+  background: #08401b;
   color: #e74c3c;
 }

@@ -1,0 +1,288 @@
+.descarga-container {
+  background-color: #132426;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  margin-top: 20px;
+  color: #fff;
+}
+
+.descarga-container h2 {
+  color: #fff;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #03a64a;
+  padding-bottom: 10px;
+}
+
+.descarga-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 6px;
+}
+
+.descarga-form input {
+  padding: 10px;
+  border: 1px solid #444;
+  border-radius: 4px;
+  background-color: #1e3a3d;
+  color: #fff;
+}
+
+.btn-add {
+  background-color: #03a64a;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-add:hover {
+  background-color: #028a3d;
+}
+
+.descarga-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.descarga-table th,
+.descarga-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #2a4d50;
+}
+
+.descarga-table th {
+  background-color: #0f1c1e;
+  color: #03a64a;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+}
+
+.descarga-table th:hover {
+  background-color: #16292c;
+}
+
+.th-content {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.sort-icon.inactive {
+  opacity: 0.3;
+}
+
+.badge-status {
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+.badge-status.aguardando {
+  background-color: #ffc107;
+  color: #333;
+}
+
+.badge-status.em-descarga {
+  background-color: #17a2b8;
+  color: #fff;
+}
+
+.badge-status.folga {
+  background-color: #6f42c1;
+  color: #fff;
+}
+
+.badge-status.manutencao {
+  background-color: #fd7e14;
+  color: #fff;
+}
+
+.badge-status.afastado {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.badge-status.descarregado {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.badge-status.carregando {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.actions-cell {
+  display: flex;
+  gap: 10px;
+  position: relative; /* Necessário para o menu dropdown */
+}
+
+.btn-action {
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9rem;
+}
+
+.btn-action.edit {
+  background-color: #ffc107;
+  color: #333;
+}
+.btn-action.start {
+  background-color: #17a2b8;
+  color: white;
+}
+.btn-action.finish {
+  background-color: #28a745;
+  color: white;
+}
+.btn-action.delete {
+  background-color: #dc3545;
+  color: white;
+}
+.btn-action.change-status {
+  background-color: #17a2b8;
+  color: white;
+}
+
+/* Menu Dropdown de Status */
+.status-dropdown-container {
+  position: relative;
+}
+
+.status-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #1e3a3d;
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 100;
+  min-width: 120px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.status-menu button {
+  background: none;
+  border: none;
+  color: #fff;
+  padding: 8px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 0.9rem;
+}
+
+.status-menu button:hover {
+  background-color: #03a64a;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 30px;
+  color: #888;
+}
+
+.search-filter {
+  padding: 10px;
+  border: 1px solid #444;
+  border-radius: 4px;
+  background-color: #1e3a3d;
+  color: #fff;
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 20px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 8px 15px;
+  background-color: #1e3a3d;
+  color: white;
+  border: 1px solid #444;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination button:not(:disabled):hover {
+  background-color: #03a64a;
+  border-color: #03a64a;
+}
+
+/* Painel de Contadores de Status */
+.status-summary {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.status-card-summary {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 100px;
+  border-top-width: 4px;
+  transition: transform 0.2s;
+}
+
+.status-card-summary:hover {
+  transform: translateY(-2px);
+}
+
+.status-card-summary .status-label {
+  font-size: 0.85rem;
+  color: #ccc;
+  margin-bottom: 5px;
+}
+
+.status-card-summary .status-count {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* Cores das bordas superiores baseadas no status */
+.status-card-summary.aguardando { border-top-color: #ffc107; }
+.status-card-summary.carregando { border-top-color: #007bff; }
+.status-card-summary.descarregado { border-top-color: #28a745; }
+.status-card-summary.folga { border-top-color: #6f42c1; }
+.status-card-summary.manutencao { border-top-color: #fd7e14; }
+.status-card-summary.afastado { border-top-color: #6c757d; }
