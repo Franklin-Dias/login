@@ -43,9 +43,9 @@ const ListadeDescarga = () => {
   useEffect(() => {
     const verificarEscalas = () => {
       const escalas = JSON.parse(localStorage.getItem("escalas") || "[]");
-      const motoristasEscalados = escalas.map((e) =>
-        e.motorista?.toLowerCase()
-      );
+      const motoristasEscalados = escalas
+        .filter((e) => e.status !== "Finalizada")
+        .map((e) => e.motorista?.toLowerCase());
 
       setLista((prevLista) => {
         const novaLista = prevLista.filter(
@@ -125,14 +125,58 @@ const ListadeDescarga = () => {
       motorista: "",
       gestor: "",
       cliente: "",
-      status: "Aguardando",
+      status: "Descarregado",
     });
   };
 
   const alterarStatus = (id, novoStatus) => {
+    // Lógica para salvar histórico de manutenção ao finalizar (parar o tempo)
+    const item = lista.find((i) => i.id === id);
+    if (item && item.status === "Manutenção" && novoStatus !== "Manutenção") {
+      const dataInicio = new Date(item.inicioManutencao || item.dataHora);
+      const dataFim = new Date();
+      const diff = dataFim - dataInicio;
+
+      const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const horas = Math.floor(
+        (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      );
+      const minutos = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const segundos = Math.floor((diff % (1000 * 60)) / 1000);
+      const duracao =
+        dias > 0
+          ? `${dias}d ${horas}h ${minutos}m`
+          : `${horas}h ${minutos}m ${segundos}s`;
+
+      const historico = JSON.parse(
+        localStorage.getItem("historicoManutencao") || "[]"
+      );
+      const novoRegistro = {
+        id: Date.now(),
+        placa: item.placa,
+        motorista: item.motorista,
+        inicio: item.inicioManutencao || item.dataHora,
+        fim: dataFim.toISOString(),
+        duracao: duracao,
+      };
+      localStorage.setItem(
+        "historicoManutencao",
+        JSON.stringify([novoRegistro, ...historico])
+      );
+    }
+
     setLista(
       lista.map((item) =>
-        item.id === id ? { ...item, status: novoStatus } : item
+        item.id === id
+          ? {
+              ...item,
+              status: novoStatus,
+              inicioManutencao:
+                novoStatus === "Manutenção"
+                  ? new Date().toISOString()
+                  : item.inicioManutencao,
+            }
+          : item
       )
     );
   };
@@ -204,7 +248,7 @@ const ListadeDescarga = () => {
 
   // Função auxiliar para gerar classes CSS seguras (sem acentos/espaços)
   const getStatusClass = (status) => {
-    return (status || "Aguardando")
+    return (status || "Descarregado")
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
@@ -213,12 +257,13 @@ const ListadeDescarga = () => {
 
   // Contagem de status para o painel superior
   const statusCounts = lista.reduce((acc, item) => {
-    const status = item.status || "Aguardando";
+    const status = item.status || "Descarregado";
     acc[status] = (acc[status] || 0) + 1;
     return acc;
   }, {});
 
   const statusOrder = [
+    "Disponível",
     "Aguardando",
     "Carregando",
     "Descarregado",
@@ -380,6 +425,14 @@ const ListadeDescarga = () => {
                     </button>
                     {activeStatusMenu === item.id && (
                       <div className="status-menu">
+                        <button
+                          onClick={() => {
+                            alterarStatus(item.id, "Disponível");
+                            setActiveStatusMenu(null);
+                          }}
+                        >
+                          Disponível
+                        </button>
                         <button
                           onClick={() => {
                             alterarStatus(item.id, "Folga");

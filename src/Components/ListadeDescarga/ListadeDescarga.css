@@ -92,6 +92,11 @@
   color: #333;
 }
 
+.badge-status.disponivel {
+  background-color: #0dcaf0; /* Ciano/Azul Claro */
+  color: #000;
+}
+
 .badge-status.em-descarga {
   background-color: #17a2b8;
   color: #fff;
@@ -178,7 +183,7 @@
   gap: 5px;
   z-index: 100;
   min-width: 120px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .status-menu button {
@@ -280,9 +285,24 @@
 }
 
 /* Cores das bordas superiores baseadas no status */
-.status-card-summary.aguardando { border-top-color: #ffc107; }
-.status-card-summary.carregando { border-top-color: #007bff; }
-.status-card-summary.descarregado { border-top-color: #28a745; }
-.status-card-summary.folga { border-top-color: #6f42c1; }
-.status-card-summary.manutencao { border-top-color: #fd7e14; }
-.status-card-summary.afastado { border-top-color: #6c757d; }
+.status-card-summary.aguardando {
+  border-top-color: #ffc107;
+}
+.status-card-summary.carregando {
+  border-top-color: #007bff;
+}
+.status-card-summary.descarregado {
+  border-top-color: #28a745;
+}
+.status-card-summary.folga {
+  border-top-color: #6f42c1;
+}
+.status-card-summary.manutencao {
+  border-top-color: #fd7e14;
+}
+.status-card-summary.afastado {
+  border-top-color: #6c757d;
+}
+.status-card-summary.disponivel {
+  border-top-color: #0dcaf0;
+}

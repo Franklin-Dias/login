@@ -1,16 +1,16 @@
 .cadastro-container {
-  background-color: #fff;
+  background-color: #132426;
   padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
   max-width: 800px;
   margin: 0 auto;
 }
 
 .cadastro-container h2 {
   margin-bottom: 1.5rem;
-  color: #333;
-  border-bottom: 2px solid #f0f0f0;
+  color: #fff;
+  border-bottom: 2px solid #03A64A;
   padding-bottom: 0.5rem;
 }
 
@@ -27,7 +27,7 @@
 
 .form-group label {
   font-weight: 600;
-  color: #555;
+  color: #fff;
 }
 
 .form-group input,
@@ -46,8 +46,8 @@
 }
 
 .btn-save {
-  background-color: #28a745;
-  color: white;
+  background-color: #05F26C;
+  color: #132426;
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 4px;
@@ -56,8 +56,8 @@
 }
 
 .btn-cancel {
-  background-color: #6c757d;
-  color: white;
+  background-color: #dc3545;
+  color: #fff;
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 4px;
@@ -84,8 +84,8 @@
 }
 
 .list-table th {
-  background-color: #f8f9fa;
-  color: #333;
+  background-color: #fff;
+  color: #132426;
 }
 
 .btn-delete {

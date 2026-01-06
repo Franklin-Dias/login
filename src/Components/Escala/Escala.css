@@ -1,6 +1,6 @@
 .escala-container {
   padding: 20px;
-  background-color: #08401B;
+  background-color: #08401b;
   height: 100%;
   overflow-y: auto;
   border-radius: 8px;
@@ -19,7 +19,8 @@
 }
 
 .escala-form-section,
-.escala-list-section {
+.escala-list-section,
+.client-info-section {
   background: #132426;
   padding: 20px;
   border-radius: 8px;
@@ -27,10 +28,11 @@
 }
 
 .escala-form-section h2,
-.escala-list-section h2 {
+.escala-list-section h2,
+.client-info-section h3 {
   margin-bottom: 20px;
   color: #fff;
-  border-bottom: 2px solid #05F26C;
+  border-bottom: 2px solid #05f26c;
   padding-bottom: 10px;
 }
 
@@ -57,14 +59,13 @@
 .form-group input,
 .form-group textarea {
   padding: 10px;
-  border: 1px solid #08401B;
+  border: 1px solid #08401b;
   border-radius: 4px;
   font-size: 14px;
-  
 }
 
 .btn-escalar {
-  background-color: #05F26C;
+  background-color: #05f26c;
   color: #132426;
   border: none;
   padding: 12px 24px;
@@ -77,12 +78,12 @@
 }
 
 .btn-escalar:hover {
-  background-color: #08401B;
+  background-color: #08401b;
   color: #fff;
 }
 
 .btn-cancel {
-  background-color: #05F26C;
+  background-color: #05f26c;
   color: #132426;
   border: none;
   padding: 12px 24px;
@@ -96,7 +97,7 @@
 }
 
 .btn-cancel:hover {
-  background-color: #08401B;
+  background-color: #08401b;
   color: #fff;
 }
 
@@ -148,7 +149,7 @@
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
-  border-bottom: 1px solid #03A64A;
+  border-bottom: 1px solid #03a64a;
   padding-bottom: 10px;
   overflow-x: auto;
 }
@@ -166,13 +167,12 @@
 }
 
 .tab-btn:hover {
-  background-color: #03A64A;
+  background-color: #03a64a;
   color: #132426;
-
 }
 
 .tab-btn.active {
-  background-color: #05F26C;
+  background-color: #05f26c;
   color: #132426;
 }
 
@@ -184,16 +184,44 @@
   font-weight: bold;
   display: inline-block;
 }
-.status-badge.pendente { background-color: #ffeeba; color: #856404; }
-.status-badge.enviado { background-color: #b8daff; color: #004085; }
-.status-badge.aceito { background-color: #c3e6cb; color: #155724; }
+.status-badge.pendente {
+  background-color: #ffeeba;
+  color: #856404;
+}
+.status-badge.enviado {
+  background-color: #b8daff;
+  color: #004085;
+}
+.status-badge.aceito {
+  background-color: #c3e6cb;
+  color: #155724;
+}
+.status-badge.finalizada {
+  background-color: #6f42c1;
+  color: #fff;
+}
 
 /* Action Buttons */
-.btn-whatsapp { color: #25d366; }
-.btn-whatsapp:hover { background-color: #e6fffa; }
+.btn-whatsapp {
+  color: #25d366;
+}
+.btn-whatsapp:hover {
+  background-color: #e6fffa;
+}
 
-.btn-accept { color: #28a745; }
-.btn-accept:hover { background-color: #e6f9e6; }
+.btn-accept {
+  color: #28a745;
+}
+.btn-accept:hover {
+  background-color: #e6f9e6;
+}
+
+.btn-finalize {
+  color: #6f42c1;
+}
+.btn-finalize:hover {
+  background-color: #f3e5f5;
+}
 
 /* Summary Cards */
 .summary-cards {
@@ -212,7 +240,6 @@
   border-left: 5px solid #fff;
   cursor: pointer;
   transition: all 0.2s ease;
-
 }
 
 .summary-card:hover {
@@ -239,10 +266,22 @@
   font-weight: 500;
 }
 
-.summary-card.total {background-color:#132426; border-left-color: #6c757d; }
-.summary-card.pendente {background-color:#132426; border-left-color: #ffc107; }
-.summary-card.enviado {background-color:#132426; border-left-color: #007bff; }
-.summary-card.aceito {background-color:#132426; border-left-color: #28a745; }
+.summary-card.total {
+  background-color: #132426;
+  border-left-color: #6c757d;
+}
+.summary-card.pendente {
+  background-color: #132426;
+  border-left-color: #ffc107;
+}
+.summary-card.enviado {
+  background-color: #132426;
+  border-left-color: #007bff;
+}
+.summary-card.aceito {
+  background-color: #132426;
+  border-left-color: #28a745;
+}
 
 /* Contratos Actions */
 .contratos-actions {
@@ -252,7 +291,7 @@
 }
 
 .btn-new-contract {
-  background-color: #05F26C;
+  background-color: #05f26c;
   color: #132426;
   border: none;
   padding: 8px 16px;
@@ -269,4 +308,31 @@
   transform: translateY(-2px);
   background-color: #132426;
   color: #fff;
+}
+
+/* Client Info Section */
+.client-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 15px;
+}
+
+.info-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.info-group label {
+  font-size: 0.85rem;
+  color: #ccc;
+}
+
+.info-group input {
+  padding: 8px;
+  background-color: #1e3a3d;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 0.9rem;
 }

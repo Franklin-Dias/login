@@ -15,6 +15,8 @@ const CadastroVeiculo = ({ onCancel }) => {
     modelo: "",
     ano: "",
     tipo: "",
+    latitude: "",
+    longitude: "",
   });
 
   // Salva no localStorage sempre que a lista de veículos mudar
@@ -117,6 +119,28 @@ const CadastroVeiculo = ({ onCancel }) => {
             onChange={handleChange}
             placeholder="2024"
             required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="latitude">Latitude</label>
+          <input
+            type="text"
+            id="latitude"
+            name="latitude"
+            value={formData.latitude}
+            onChange={handleChange}
+            placeholder="Ex: -19.9191"
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="longitude">Longitude</label>
+          <input
+            type="text"
+            id="longitude"
+            name="longitude"
+            value={formData.longitude}
+            onChange={handleChange}
+            placeholder="Ex: -43.9386"
           />
         </div>
         <div className="form-actions">
