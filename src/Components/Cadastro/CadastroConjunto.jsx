@@ -3,10 +3,10 @@ import { FaTrash } from "react-icons/fa";
 import "./CadastroConjunto.css";
 
 const CadastroConjunto = ({ onCancel }) => {
-  const [conjuntos, setConjuntos] = useState(() => {
-    const saved = localStorage.getItem("conjuntos");
-    return saved ? JSON.parse(saved) : [];
-  });
+  // Carrega dados do localStorage
+  const [conjuntos, setConjuntos] = useState(() =>
+    JSON.parse(localStorage.getItem("conjuntos") || "[]")
+  );
 
   const [formData, setFormData] = useState({
     placaCavalo: "",
@@ -14,90 +14,117 @@ const CadastroConjunto = ({ onCancel }) => {
     motoristaTitular: "",
   });
 
+  // Salva conjuntos no localStorage sempre que houver alteração
   useEffect(() => {
     localStorage.setItem("conjuntos", JSON.stringify(conjuntos));
   }, [conjuntos]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: name.startsWith("placa") ? value.toUpperCase() : value,
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name.includes("placa") ? value.toUpperCase() : value,
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (
-      !formData.placaCavalo ||
-      !formData.placaCarreta ||
-      !formData.motoristaTitular
-    ) {
-      alert("Por favor, preencha todos os campos.");
+
+    if (!formData.placaCavalo || !formData.motoristaTitular) {
+      alert("Por favor, selecione pelo menos o Cavalo e o Motorista.");
       return;
     }
+
+    // Verifica se já existe um conjunto com este cavalo
+    const existe = conjuntos.some(
+      (c) => c.placaCavalo === formData.placaCavalo
+    );
+    if (existe) {
+      alert("Já existe um conjunto formado com este cavalo.");
+      return;
+    }
+
+    // 1. Cria o objeto do Conjunto
     const novoConjunto = {
       id: Date.now(),
       ...formData,
     };
-    setConjuntos((prevConjuntos) => [...prevConjuntos, novoConjunto]);
-    alert("Conjunto cadastrado com sucesso!");
-    // Reset form
-    setFormData({
-      placaCavalo: "",
-      placaCarreta: "",
-      motoristaTitular: "",
-    });
+
+    // Atualiza a lista de conjuntos
+    setConjuntos([...conjuntos, novoConjunto]);
+
+    // --- INTEGRAÇÃO COM LISTA DE DESCARGA ---
+    // Adiciona automaticamente à lista de descarga com status "Disponível"
+    const listaDescargaAtual = JSON.parse(
+      localStorage.getItem("listaDescarga") || "[]"
+    );
+
+    const novoItemDescarga = {
+      id: Date.now() + 1, // ID único (diferente do conjunto)
+      dataHora: new Date().toISOString(),
+      placa: formData.placaCavalo,
+      placaCarreta: formData.placaCarreta,
+      motorista: formData.motoristaTitular,
+      gestor: "",
+      cliente: "",
+      status: "Disponível", // Status solicitado
+    };
+
+    const novaListaDescarga = [...listaDescargaAtual, novoItemDescarga];
+    localStorage.setItem("listaDescarga", JSON.stringify(novaListaDescarga));
+
+    // Dispara evento para atualizar outros componentes se necessário
+    window.dispatchEvent(new Event("storage"));
+    // ----------------------------------------
+
+    alert("Conjunto criado e adicionado à Lista de Descarga como Disponível!");
+    setFormData({ placaCavalo: "", placaCarreta: "", motoristaTitular: "" });
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("Tem certeza que deseja excluir este conjunto?")) {
-      setConjuntos((prevConjuntos) => prevConjuntos.filter((c) => c.id !== id));
+    if (window.confirm("Deseja desfazer este conjunto?")) {
+      setConjuntos(conjuntos.filter((c) => c.id !== id));
     }
   };
 
   return (
     <div className="cadastro-container">
-      <h2>Cadastro de Conjunto</h2>
+      <h2>Formação de Conjunto</h2>
       <form onSubmit={handleSubmit} className="cadastro-form">
         <div className="form-group">
-          <label htmlFor="placaCavalo">Placa do Cavalo</label>
+          <label>Cavalo / Truck</label>
           <input
             type="text"
-            id="placaCavalo"
             name="placaCavalo"
             value={formData.placaCavalo}
             onChange={handleChange}
-            required
-            placeholder="AAA-0A00"
+            placeholder="Digite a placa (Ex: ABC-1234)"
             maxLength="8"
+            required
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="placaCarreta">Placa da Carreta</label>
+          <label>Carreta (Opcional)</label>
           <input
             type="text"
-            id="placaCarreta"
             name="placaCarreta"
             value={formData.placaCarreta}
             onChange={handleChange}
-            required
-            placeholder="BBB-1B11"
+            placeholder="Digite a placa da carreta"
             maxLength="8"
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="motoristaTitular">Motorista Titular</label>
+          <label>Motorista Titular</label>
           <input
             type="text"
-            id="motoristaTitular"
             name="motoristaTitular"
             value={formData.motoristaTitular}
             onChange={handleChange}
+            placeholder="Nome do Motorista"
             required
-            placeholder="Digite o nome do motorista"
           />
         </div>
 
@@ -112,28 +139,28 @@ const CadastroConjunto = ({ onCancel }) => {
       </form>
 
       <div className="list-container">
-        <h3>Conjuntos Cadastrados</h3>
+        <h3>Conjuntos Formados</h3>
         <table className="list-table">
           <thead>
             <tr>
               <th>Cavalo</th>
               <th>Carreta</th>
-              <th>Motorista Titular</th>
+              <th>Motorista</th>
               <th>Ações</th>
             </tr>
           </thead>
           <tbody>
             {conjuntos.length > 0 ? (
-              conjuntos.map((conjunto) => (
-                <tr key={conjunto.id}>
-                  <td>{conjunto.placaCavalo}</td>
-                  <td>{conjunto.placaCarreta}</td>
-                  <td>{conjunto.motoristaTitular}</td>
+              conjuntos.map((c) => (
+                <tr key={c.id}>
+                  <td>{c.placaCavalo}</td>
+                  <td>{c.placaCarreta || "-"}</td>
+                  <td>{c.motoristaTitular}</td>
                   <td>
                     <button
                       className="btn-delete"
-                      onClick={() => handleDelete(conjunto.id)}
-                      title="Excluir"
+                      onClick={() => handleDelete(c.id)}
+                      title="Excluir Conjunto"
                     >
                       <FaTrash />
                     </button>
@@ -143,7 +170,7 @@ const CadastroConjunto = ({ onCancel }) => {
             ) : (
               <tr>
                 <td colSpan="4" style={{ textAlign: "center" }}>
-                  Nenhum conjunto cadastrado.
+                  Nenhum conjunto formado.
                 </td>
               </tr>
             )}
