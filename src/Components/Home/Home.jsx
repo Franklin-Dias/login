@@ -38,6 +38,8 @@ import DetalhesMotorista from "../Cadastro/DetalhesMotorista";
 import Escala from "../Escala/Escala";
 import ListadeDescarga from "../ListadeDescarga/ListadeDescarga";
 import Placas from "../Placas/Placas";
+import Manutencao from "../Manutencao/Manutencao";
+import Motorista from "../Motorista/Motorista";
 import "./Home.css";
 
 // Correção para ícones do Leaflet
@@ -51,13 +53,7 @@ L.Icon.Default.mergeOptions({
 
 // Ícone personalizado para Caminhão (Cavalo)
 const truckIconMarkup = renderToStaticMarkup(
-  <div
-    style={{
-      fontSize: "24px",
-      color: "#007bff",
-      filter: "drop-shadow(2px 2px 2px rgba(0,0,0,0.5))",
-    }}
-  >
+  <div className="truck-icon-markup">
     <FaTruck />
   </div>
 );
@@ -72,13 +68,7 @@ const truckIcon = L.divIcon({
 
 // Ícone personalizado para Pedágio
 const tollIconMarkup = renderToStaticMarkup(
-  <div
-    style={{
-      fontSize: "24px",
-      color: "#ffc107",
-      filter: "drop-shadow(2px 2px 2px rgba(0,0,0,0.5))",
-    }}
-  >
+  <div className="toll-icon-markup">
     <FaMoneyBillWave />
   </div>
 );
@@ -173,6 +163,7 @@ const Home = () => {
 
       // Calcular domingos trabalhados
       const escalas = JSON.parse(localStorage.getItem("escalas") || "[]");
+      const motoristas = JSON.parse(localStorage.getItem("motoristas") || "[]");
       const driverSundayCounts = {};
       let totalS = 0;
 
@@ -182,9 +173,17 @@ const Home = () => {
           if (date.getDay() === 0) {
             const driver = e.motorista;
             if (driver) {
-              driverSundayCounts[driver] =
-                (driverSundayCounts[driver] || 0) + 1;
-              totalS++;
+              // Busca a última folga do motorista para zerar a contagem anterior
+              const motoristaObj = motoristas.find((m) => m.nome === driver);
+              const dataCorte = motoristaObj?.ultimaFolga
+                ? new Date(motoristaObj.ultimaFolga)
+                : new Date(0);
+
+              if (date > dataCorte) {
+                driverSundayCounts[driver] =
+                  (driverSundayCounts[driver] || 0) + 1;
+                totalS++;
+              }
             }
           }
         }
@@ -520,14 +519,7 @@ const Home = () => {
             )}
           </a>
           {showSubmenu && (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                paddingLeft: "20px",
-                backgroundColor: "rgba(0, 0, 0, 0.1)",
-              }}
-            >
+            <div className="sidebar-submenu">
               <a
                 href="#"
                 onClick={(e) => {
@@ -580,6 +572,16 @@ const Home = () => {
           </a>
           <a
             href="#"
+            className={activeView === "motoristas" ? "active" : ""}
+            onClick={(e) => {
+              e.preventDefault();
+              setActiveView("motoristas");
+            }}
+          >
+            Motoristas
+          </a>
+          <a
+            href="#"
             className={activeView === "listaDescarga" ? "active" : ""}
             onClick={(e) => {
               e.preventDefault();
@@ -588,7 +590,16 @@ const Home = () => {
           >
             Lista de Descarga
           </a>
-          <a href="#">Manutenção</a>
+          <a
+            href="#"
+            className={activeView === "manutencao" ? "active" : ""}
+            onClick={(e) => {
+              e.preventDefault();
+              setActiveView("manutencao");
+            }}
+          >
+            Manutenção
+          </a>
           <a href="#">Relatórios</a>
           <a href="#">Configurações</a>
         </nav>
@@ -634,28 +645,10 @@ const Home = () => {
                       <FaTimes />
                     </button>
                   </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "flex-end",
-                      marginBottom: "10px",
-                    }}
-                  >
+                  <div className="popup-actions">
                     <button
                       onClick={handleExportSundayDrivers}
-                      style={{
-                        backgroundColor: "#08401b",
-                        color: "#05f26c",
-                        border: "1px solid #05f26c",
-                        padding: "6px 12px",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "6px",
-                        fontSize: "0.85rem",
-                        fontWeight: "bold",
-                      }}
+                      className="popup-export-btn"
                     >
                       <FaDownload /> Exportar CSV
                     </button>
@@ -670,13 +663,7 @@ const Home = () => {
                       ))}
                     </ul>
                   ) : (
-                    <p
-                      style={{
-                        textAlign: "center",
-                        padding: "20px",
-                        color: "#ccc",
-                      }}
-                    >
+                    <p className="popup-empty">
                       Nenhum motorista excedeu o limite de 3 domingos.
                     </p>
                   )}
@@ -684,26 +671,10 @@ const Home = () => {
               </div>
             )}
 
-            <section
-              className="map-section"
-              style={{
-                marginBottom: "30px",
-                background: "#132426",
-                padding: "20px",
-                borderRadius: "8px",
-                boxShadow: "0 2px 5px rgba(0, 0, 0, 0.12)",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginBottom: "15px",
-                }}
-              >
-                <h2 style={{ margin: 0 }}>Localização da Frota</h2>
-                <div style={{ display: "flex", gap: "10px" }}>
+            <section className="map-section-container">
+              <div className="map-header">
+                <h2>Localização da Frota</h2>
+                <div className="map-controls">
                   {routePoints.length > 0 && (
                     <button
                       onClick={() => {
@@ -714,50 +685,22 @@ const Home = () => {
                         setShowInstructions(false);
                         setTollMarkers([]);
                       }}
-                      style={{
-                        backgroundColor: "#dc3545",
-                        color: "#fff",
-                        border: "1px solid #444",
-                        padding: "8px 12px",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px",
-                      }}
+                      className="btn-map-control danger"
                     >
                       <FaTimes /> Limpar Rota
                     </button>
                   )}
                   <button
                     onClick={() => setIsRouteMode(!isRouteMode)}
-                    style={{
-                      backgroundColor: isRouteMode ? "#e74c3c" : "#1e3a3d",
-                      color: "#fff",
-                      border: "1px solid #444",
-                      padding: "8px 12px",
-                      borderRadius: "4px",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px",
-                    }}
+                    className={`btn-map-control ${
+                      isRouteMode ? "active" : "primary"
+                    }`}
                   >
                     <FaRoute /> {isRouteMode ? "Parar Rota" : "Criar Rota"}
                   </button>
                   <button
                     onClick={() => setIsSatellite(!isSatellite)}
-                    style={{
-                      backgroundColor: "#1e3a3d",
-                      color: "#fff",
-                      border: "1px solid #444",
-                      padding: "8px 12px",
-                      borderRadius: "4px",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px",
-                    }}
+                    className="btn-map-control primary"
                   >
                     {isSatellite ? <FaMap /> : <FaSatellite />}
                     {isSatellite ? "Modo Mapa" : "Modo Satélite"}
@@ -766,65 +709,32 @@ const Home = () => {
               </div>
 
               {/* Inputs para Rota por Texto/Coordenada */}
-              <div
-                style={{
-                  display: "flex",
-                  gap: "10px",
-                  marginBottom: "15px",
-                  flexWrap: "wrap",
-                }}
-              >
+              <div className="route-controls">
                 <input
                   type="text"
                   placeholder="Origem (Cidade ou Lat,Long)"
                   value={originInput}
                   onChange={(e) => setOriginInput(e.target.value)}
-                  style={{
-                    flex: 1,
-                    minWidth: "200px",
-                    padding: "10px",
-                    borderRadius: "4px",
-                    border: "1px solid #444",
-                    background: "#1e3a3d",
-                    color: "#fff",
-                  }}
+                  className="route-input"
                 />
                 <input
                   type="text"
                   placeholder="Destino (Cidade ou Lat,Long)"
                   value={destinationInput}
                   onChange={(e) => setDestinationInput(e.target.value)}
-                  style={{
-                    flex: 1,
-                    minWidth: "200px",
-                    padding: "10px",
-                    borderRadius: "4px",
-                    border: "1px solid #444",
-                    background: "#1e3a3d",
-                    color: "#fff",
-                  }}
+                  className="route-input"
                 />
                 <button
                   onClick={handleRouteSearch}
-                  className="btn-new-contract" // Reutilizando estilo de botão verde
-                  style={{ whiteSpace: "nowrap" }}
+                  className="btn-new-contract btn-route-action"
                 >
                   <FaSearch /> Traçar Rota
                 </button>
                 <button
                   onClick={() => setAvoidTolls(!avoidTolls)}
-                  style={{
-                    backgroundColor: avoidTolls ? "#e74c3c" : "#1e3a3d",
-                    color: "#fff",
-                    border: "1px solid #444",
-                    padding: "10px",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                    whiteSpace: "nowrap",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "5px",
-                  }}
+                  className={`btn-toll-toggle ${
+                    avoidTolls ? "active" : "inactive"
+                  }`}
                   title={avoidTolls ? "Evitando Pedágios" : "Permitir Pedágios"}
                 >
                   <FaMoneyBillWave />{" "}
@@ -833,24 +743,9 @@ const Home = () => {
               </div>
 
               {routeInfo && (
-                <div style={{ marginBottom: "15px" }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: "15px",
-                      marginBottom: "10px",
-                      alignItems: "center",
-                      flexWrap: "wrap",
-                      fontSize: "0.9rem",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "5px",
-                      }}
-                    >
+                <div className="route-info-container">
+                  <div className="route-params">
+                    <div className="route-param-group">
                       <label>Preço Diesel (R$):</label>
                       <input
                         type="number"
@@ -858,24 +753,11 @@ const Home = () => {
                         onChange={(e) =>
                           setFuelPrice(parseFloat(e.target.value))
                         }
-                        style={{
-                          width: "70px",
-                          padding: "5px",
-                          borderRadius: "4px",
-                          border: "1px solid #444",
-                          background: "#1e3a3d",
-                          color: "#fff",
-                        }}
+                        className="route-param-input"
                         step="0.01"
                       />
                     </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "5px",
-                      }}
-                    >
+                    <div className="route-param-group">
                       <label>Consumo (km/l):</label>
                       <input
                         type="number"
@@ -883,34 +765,14 @@ const Home = () => {
                         onChange={(e) =>
                           setFuelConsumption(parseFloat(e.target.value))
                         }
-                        style={{
-                          width: "60px",
-                          padding: "5px",
-                          borderRadius: "4px",
-                          border: "1px solid #444",
-                          background: "#1e3a3d",
-                          color: "#fff",
-                        }}
+                        className="route-param-input small"
                         step="0.1"
                       />
                     </div>
                   </div>
 
-                  <div
-                    style={{
-                      padding: "10px",
-                      backgroundColor: "rgba(5, 242, 108, 0.1)",
-                      border: "1px solid #05f26c",
-                      borderRadius: "4px",
-                      color: "#fff",
-                      display: "flex",
-                      gap: "20px",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    <div style={{ display: "flex", gap: "20px" }}>
+                  <div className="route-stats-box">
+                    <div className="route-stats-content">
                       <span>
                         <strong>Distância:</strong>{" "}
                         {(routeInfo.distance / 1000).toFixed(2)} km
@@ -931,10 +793,8 @@ const Home = () => {
                         })}
                       </span>
                       <span
+                        className="toll-warning"
                         style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "5px",
                           color: routeInfo.hasTolls ? "#ffc107" : "#fff",
                         }}
                       >
@@ -945,15 +805,7 @@ const Home = () => {
                     </div>
                     <button
                       onClick={() => setShowInstructions(!showInstructions)}
-                      style={{
-                        background: "none",
-                        border: "none",
-                        color: "#05f26c",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "5px",
-                      }}
+                      className="btn-toggle-steps"
                     >
                       <FaList />{" "}
                       {showInstructions ? "Ocultar Passos" : "Ver Passos"}
@@ -961,33 +813,14 @@ const Home = () => {
                   </div>
 
                   {showInstructions && routeInstructions.length > 0 && (
-                    <div
-                      style={{
-                        marginTop: "10px",
-                        backgroundColor: "#1e3a3d",
-                        padding: "10px",
-                        borderRadius: "4px",
-                        maxHeight: "200px",
-                        overflowY: "auto",
-                        border: "1px solid #444",
-                      }}
-                    >
-                      <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                    <div className="instructions-container">
+                      <ul className="instructions-list">
                         {routeInstructions.map((step, idx) => (
-                          <li
-                            key={idx}
-                            style={{
-                              padding: "8px 0",
-                              borderBottom: "1px solid #333",
-                              display: "flex",
-                              justifyContent: "space-between",
-                              fontSize: "0.9rem",
-                            }}
-                          >
+                          <li key={idx} className="instruction-item">
                             <span>
                               {idx + 1}. {step.instruction}
                             </span>
-                            <span style={{ color: "#ccc", fontSize: "0.8rem" }}>
+                            <span className="instruction-dist">
                               {step.distance < 1000
                                 ? `${Math.round(step.distance)} m`
                                 : `${(step.distance / 1000).toFixed(1)} km`}
@@ -1000,14 +833,7 @@ const Home = () => {
                 </div>
               )}
 
-              <div
-                style={{
-                  width: "100%",
-                  height: "400px",
-                  borderRadius: "8px",
-                  overflow: "hidden",
-                }}
-              >
+              <div className="map-wrapper">
                 <MapContainer
                   center={mapCenter}
                   zoom={12}
@@ -1083,18 +909,8 @@ const Home = () => {
               </div>
             </section>
 
-            <div
-              style={{
-                display: "flex",
-                gap: "20px",
-                flexWrap: "wrap",
-                marginBottom: "30px",
-              }}
-            >
-              <section
-                className="recent-activity"
-                style={{ flex: 1, minWidth: "300px", marginBottom: 0 }}
-              >
+            <div className="dashboard-bottom">
+              <section className="recent-activity activity-section">
                 <h2>Veículos em Manutenção</h2>
                 <div className="table-container">
                   <table>
@@ -1129,12 +945,7 @@ const Home = () => {
                               <button
                                 onClick={() => handleLocateVehicle(item.placa)}
                                 title="Ver no Mapa"
-                                style={{
-                                  background: "none",
-                                  border: "none",
-                                  color: "#05f26c",
-                                  cursor: "pointer",
-                                }}
+                                className="btn-locate"
                               >
                                 <FaSearchLocation />
                               </button>
@@ -1153,40 +964,15 @@ const Home = () => {
                 </div>
               </section>
 
-              <section
-                className="recent-activity"
-                style={{ flex: 1, minWidth: "300px", marginBottom: 0 }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: "20px",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "10px",
-                    }}
-                  >
-                    <h2 style={{ margin: 0 }}>
-                      Histórico de Manutenção (Finalizadas)
-                    </h2>
+              <section className="recent-activity activity-section">
+                <div className="maintenance-header">
+                  <div className="maintenance-title-group">
+                    <h2>Histórico de Manutenção (Finalizadas)</h2>
                     <button
                       onClick={() =>
                         setShowMaintenanceHistory(!showMaintenanceHistory)
                       }
-                      style={{
-                        background: "none",
-                        border: "none",
-                        color: "#fff",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
+                      className="btn-icon-only"
                       title={showMaintenanceHistory ? "Minimizar" : "Expandir"}
                     >
                       {showMaintenanceHistory ? (
@@ -1198,18 +984,7 @@ const Home = () => {
                   </div>
                   <button
                     onClick={handleExportMaintenance}
-                    style={{
-                      backgroundColor: "#08401b",
-                      color: "#05f26c",
-                      border: "1px solid #05f26c",
-                      padding: "8px 16px",
-                      borderRadius: "4px",
-                      cursor: "pointer",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px",
-                      fontWeight: "bold",
-                    }}
+                    className="btn-export"
                   >
                     <FaDownload /> Exportar CSV
                   </button>
@@ -1259,15 +1034,7 @@ const Home = () => {
                       </table>
                     </div>
                     {totalMaintenancePages > 1 && (
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          gap: "15px",
-                          marginTop: "15px",
-                        }}
-                      >
+                      <div className="pagination-container">
                         <button
                           onClick={() =>
                             setCurrentMaintenancePage((prev) =>
@@ -1275,18 +1042,11 @@ const Home = () => {
                             )
                           }
                           disabled={currentMaintenancePage === 1}
-                          style={{
-                            padding: "5px 10px",
-                            cursor: "pointer",
-                            borderRadius: "4px",
-                            border: "1px solid #444",
-                            background: "#1e3a3d",
-                            color: "#fff",
-                          }}
+                          className="pagination-btn"
                         >
                           Anterior
                         </button>
-                        <span style={{ fontSize: "0.9rem" }}>
+                        <span className="pagination-info">
                           Página {currentMaintenancePage} de{" "}
                           {totalMaintenancePages}
                         </span>
@@ -1299,14 +1059,7 @@ const Home = () => {
                           disabled={
                             currentMaintenancePage === totalMaintenancePages
                           }
-                          style={{
-                            padding: "5px 10px",
-                            cursor: "pointer",
-                            borderRadius: "4px",
-                            border: "1px solid #444",
-                            background: "#1e3a3d",
-                            color: "#fff",
-                          }}
+                          className="pagination-btn"
                         >
                           Próximo
                         </button>
@@ -1338,6 +1091,10 @@ const Home = () => {
         {activeView === "placas" && <Placas />}
 
         {activeView === "listaDescarga" && <ListadeDescarga />}
+
+        {activeView === "manutencao" && <Manutencao />}
+
+        {activeView === "motoristas" && <Motorista />}
       </main>
     </div>
   );

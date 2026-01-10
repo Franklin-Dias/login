@@ -34,6 +34,8 @@ const ListadeDescarga = () => {
     direction: "ascending",
   });
   const [activeStatusMenu, setActiveStatusMenu] = useState(null);
+  const [showFolgaModal, setShowFolgaModal] = useState(false);
+  const [folgaData, setFolgaData] = useState({ itemId: null, start: "", end: "" });
 
   useEffect(() => {
     localStorage.setItem("listaDescarga", JSON.stringify(lista));
@@ -130,6 +132,12 @@ const ListadeDescarga = () => {
   };
 
   const alterarStatus = (id, novoStatus) => {
+    if (novoStatus === "Folga") {
+      setFolgaData({ itemId: id, start: "", end: "" });
+      setShowFolgaModal(true);
+      return;
+    }
+
     // Lógica para salvar histórico de manutenção ao finalizar (parar o tempo)
     const item = lista.find((i) => i.id === id);
     if (item && item.status === "Manutenção" && novoStatus !== "Manutenção") {
@@ -179,6 +187,67 @@ const ListadeDescarga = () => {
           : item
       )
     );
+  };
+
+  const handleConfirmarFolga = () => {
+    const { itemId, start, end } = folgaData;
+    if (!start) {
+      alert("Por favor, selecione a data de início.");
+      return;
+    }
+
+    const dataInicio = new Date(start + "T12:00:00");
+    const dataFim = end ? new Date(end + "T12:00:00") : dataInicio;
+
+    // Validação: Data de início não pode ser no passado
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const checkStart = new Date(dataInicio);
+    checkStart.setHours(0, 0, 0, 0);
+
+    if (checkStart < today) {
+      alert("A data de início da folga não pode ser anterior à data atual.");
+      return;
+    }
+
+    if (dataFim < dataInicio) {
+      alert("A data final não pode ser anterior à inicial.");
+      return;
+    }
+
+    // Atualiza status na Lista de Descarga
+    setLista(
+      lista.map((item) =>
+        item.id === itemId ? { ...item, status: "Folga" } : item
+      )
+    );
+
+    // Atualiza Motoristas no localStorage
+    const itemDescarga = lista.find((i) => i.id === itemId);
+    if (itemDescarga && itemDescarga.motorista) {
+      const motoristas = JSON.parse(localStorage.getItem("motoristas") || "[]");
+      const novosMotoristas = motoristas.map((m) => {
+        if (m.nome && m.nome.toLowerCase() === itemDescarga.motorista.toLowerCase()) {
+          const novaFolga = {
+            inicio: dataInicio.toISOString(),
+            fim: dataFim.toISOString(),
+            registradoEm: new Date().toISOString(),
+          };
+          return {
+            ...m,
+            inicioFolga: dataInicio.toISOString(),
+            ultimaFolga: dataFim.toISOString(),
+            historicoFolgas: [novaFolga, ...(m.historicoFolgas || [])],
+          };
+        }
+        return m;
+      });
+      localStorage.setItem("motoristas", JSON.stringify(novosMotoristas));
+      window.dispatchEvent(new Event("storage"));
+    }
+
+    setShowFolgaModal(false);
+    setFolgaData({ itemId: null, start: "", end: "" });
   };
 
   const editarItem = (item) => {
@@ -525,6 +594,46 @@ const ListadeDescarga = () => {
           >
             Próximo
           </button>
+        </div>
+      )}
+
+      {/* Modal de Registro de Folga */}
+      {showFolgaModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Registrar Folga</h3>
+            <div className="form-group-modal">
+              <label>Início da Folga:</label>
+              <input
+                type="date"
+                value={folgaData.start}
+                onChange={(e) =>
+                  setFolgaData({ ...folgaData, start: e.target.value })
+                }
+              />
+            </div>
+            <div className="form-group-modal">
+              <label>Fim da Folga:</label>
+              <input
+                type="date"
+                value={folgaData.end}
+                onChange={(e) =>
+                  setFolgaData({ ...folgaData, end: e.target.value })
+                }
+              />
+            </div>
+            <div className="modal-actions">
+              <button
+                onClick={() => setShowFolgaModal(false)}
+                className="btn-cancel-modal"
+              >
+                Cancelar
+              </button>
+              <button onClick={handleConfirmarFolga} className="btn-confirm-modal">
+                Confirmar
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
