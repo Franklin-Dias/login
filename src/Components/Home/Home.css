@@ -274,3 +274,330 @@ th {
   font-weight: bold;
   color: #fff;
 }
+
+/* --- Novos Estilos Extraídos do Home.jsx --- */
+
+/* Ícones do Mapa */
+.truck-icon-markup {
+  font-size: 24px;
+  color: #007bff;
+  filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5));
+}
+
+.toll-icon-markup {
+  font-size: 24px;
+  color: #ffc107;
+  filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5));
+}
+
+/* Submenu Lateral */
+.sidebar-submenu {
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Seção do Mapa */
+.map-section-container {
+  margin-bottom: 30px;
+  background: #132426;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+}
+
+.map-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.map-header h2 {
+  margin: 0;
+}
+
+.map-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-map-control {
+  color: #fff;
+  border: 1px solid #444;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-map-control.danger {
+  background-color: #dc3545;
+}
+
+.btn-map-control.primary {
+  background-color: #1e3a3d;
+}
+
+.btn-map-control.active {
+  background-color: #e74c3c;
+}
+
+/* Controles de Rota */
+.route-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.route-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #444;
+  background: #1e3a3d;
+  color: #fff;
+}
+
+.btn-route-action {
+  white-space: nowrap;
+}
+
+.btn-toll-toggle {
+  color: #fff;
+  border: 1px solid #444;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-toll-toggle.active {
+  background-color: #e74c3c;
+}
+
+.btn-toll-toggle.inactive {
+  background-color: #1e3a3d;
+}
+
+/* Informações da Rota */
+.route-info-container {
+  margin-bottom: 15px;
+}
+
+.route-params {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+}
+
+.route-param-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.route-param-input {
+  width: 70px;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #444;
+  background: #1e3a3d;
+  color: #fff;
+}
+
+.route-param-input.small {
+  width: 60px;
+}
+
+.route-stats-box {
+  padding: 10px;
+  background-color: rgba(5, 242, 108, 0.1);
+  border: 1px solid #05f26c;
+  border-radius: 4px;
+  color: #fff;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.route-stats-content {
+  display: flex;
+  gap: 20px;
+}
+
+.toll-warning {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-toggle-steps {
+  background: none;
+  border: none;
+  color: #05f26c;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Lista de Instruções */
+.instructions-container {
+  margin-top: 10px;
+  background-color: #1e3a3d;
+  padding: 10px;
+  border-radius: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #444;
+}
+
+.instructions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.instruction-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #333;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+}
+
+.instruction-dist {
+  color: #ccc;
+  font-size: 0.8rem;
+}
+
+/* Wrapper do Mapa */
+.map-wrapper {
+  width: 100%;
+  height: 400px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Dashboard Inferior */
+.dashboard-bottom {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.activity-section {
+  flex: 1;
+  min-width: 300px;
+  margin-bottom: 0;
+}
+
+.maintenance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.maintenance-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.maintenance-title-group h2 {
+  margin: 0;
+}
+
+.btn-icon-only {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.btn-export {
+  background-color: #08401b;
+  color: #05f26c;
+  border: 1px solid #05f26c;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+}
+
+.btn-locate {
+  background: none;
+  border: none;
+  color: #05f26c;
+  cursor: pointer;
+}
+
+/* Paginação */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.pagination-btn {
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: 1px solid #444;
+  background: #1e3a3d;
+  color: #fff;
+}
+
+.pagination-info {
+  font-size: 0.9rem;
+}
+
+/* Popup */
+.popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.popup-export-btn {
+  background-color: #08401b;
+  color: #05f26c;
+  border: 1px solid #05f26c;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+.popup-empty {
+  text-align: center;
+  padding: 20px;
+  color: #ccc;
+}

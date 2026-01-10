@@ -13,6 +13,7 @@ import {
   FaEyeSlash,
   FaArchive,
   FaUndo,
+  FaChartBar,
 } from "react-icons/fa";
 import "./Escala.css";
 
@@ -115,6 +116,24 @@ function Escala({ initialContract }) {
     return saved ? JSON.parse(saved) : {};
   });
 
+  // Estado para autocomplete de motoristas
+  const [motoristasList] = useState(() => {
+    const saved = localStorage.getItem("motoristas");
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [showDriverSuggestions, setShowDriverSuggestions] = useState(false);
+
+  // Estado para nova máquina na escala de colheita
+  const [novaMaquina, setNovaMaquina] = useState({
+    maquina: "",
+    hectares: "",
+    operador: "",
+    telefone: "",
+  });
+  const [editingMaquinaId, setEditingMaquinaId] = useState(null);
+  const [isColheitaExpanded, setIsColheitaExpanded] = useState(true);
+  const [isProdutividadeExpanded, setIsProdutividadeExpanded] = useState(true);
+
   useEffect(() => {
     localStorage.setItem("contratoDetalhes", JSON.stringify(contratoDetalhes));
   }, [contratoDetalhes]);
@@ -131,6 +150,14 @@ function Escala({ initialContract }) {
   };
 
   const currentDetalhes = contratoDetalhes[activeTab] || {};
+
+  // Cálculos para Produtividade
+  const totalCargas = escalas.filter(
+    (e) => e.cliente === activeTab && e.status !== "Cancelado"
+  ).length;
+  const totalHectares = parseFloat(currentDetalhes.hectares || 0);
+  const mediaHaPorCarga =
+    totalCargas > 0 ? (totalHectares / totalCargas).toFixed(2) : "0.00";
 
   // Salvar no localStorage sempre que escalas mudar
   useEffect(() => {
@@ -202,8 +229,125 @@ function Escala({ initialContract }) {
     }
   };
 
+  const handleDriverChange = (e) => {
+    const { value } = e.target;
+    setFormData((prev) => ({ ...prev, motorista: value }));
+    setShowDriverSuggestions(true);
+  };
+
+  const handleDriverSelect = (motorista) => {
+    // Busca conjunto vinculado ao motorista para preencher cavalo e carreta
+    const conjunto = conjuntos.find(
+      (c) =>
+        c.motoristaTitular &&
+        c.motoristaTitular.toLowerCase() === motorista.nome.toLowerCase()
+    );
+
+    setFormData((prev) => ({
+      ...prev,
+      motorista: motorista.nome,
+      telefone: motorista.celular || prev.telefone,
+      cavalo: conjunto ? conjunto.placaCavalo : prev.cavalo,
+      carreta: conjunto ? conjunto.placaCarreta : prev.carreta,
+    }));
+    setShowDriverSuggestions(false);
+  };
+
+  const handleAddMaquina = (e) => {
+    e.preventDefault();
+    if (!novaMaquina.maquina || !novaMaquina.operador) {
+      alert("Por favor, preencha Máquina e Operador.");
+      return;
+    }
+
+    setContratoDetalhes((prev) => {
+      const detalhes = prev[activeTab] || {};
+      const maquinas = detalhes.maquinas || [];
+
+      if (editingMaquinaId) {
+        return {
+          ...prev,
+          [activeTab]: {
+            ...detalhes,
+            maquinas: maquinas.map((m) =>
+              m.id === editingMaquinaId ? { ...m, ...novaMaquina } : m
+            ),
+          },
+        };
+      }
+
+      return {
+        ...prev,
+        [activeTab]: {
+          ...detalhes,
+          maquinas: [...maquinas, { id: Date.now(), ...novaMaquina }],
+        },
+      };
+    });
+    setNovaMaquina({ maquina: "", hectares: "", operador: "", telefone: "" });
+    setEditingMaquinaId(null);
+  };
+
+  const handleEditMaquina = (item) => {
+    setNovaMaquina({
+      maquina: item.maquina,
+      hectares: item.hectares,
+      operador: item.operador,
+      telefone: item.telefone || "",
+    });
+    setEditingMaquinaId(item.id);
+  };
+
+  const handleCancelEditMaquina = () => {
+    setNovaMaquina({ maquina: "", hectares: "", operador: "", telefone: "" });
+    setEditingMaquinaId(null);
+  };
+
+  const handleRemoveMaquina = (id) => {
+    setContratoDetalhes((prev) => {
+      const detalhes = prev[activeTab] || {};
+      const maquinas = detalhes.maquinas || [];
+      return {
+        ...prev,
+        [activeTab]: {
+          ...detalhes,
+          maquinas: maquinas.filter((m) => m.id !== id),
+        },
+      };
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Validação: Verificar cadastro do motorista e vínculo com conjunto
+    const motoristasCadastrados = JSON.parse(
+      localStorage.getItem("motoristas") || "[]"
+    );
+    const conjuntosCadastrados = JSON.parse(
+      localStorage.getItem("conjuntos") || "[]"
+    );
+    const motoristaNome = formData.motorista.trim().toLowerCase();
+
+    const motoristaExiste = motoristasCadastrados.some(
+      (m) => m.nome.toLowerCase() === motoristaNome
+    );
+
+    if (!motoristaExiste) {
+      alert("Erro: O motorista informado não está cadastrado no sistema.");
+      return;
+    }
+
+    const possuiConjunto = conjuntosCadastrados.some(
+      (c) => c.motoristaTitular.toLowerCase() === motoristaNome
+    );
+
+    if (!possuiConjunto) {
+      alert(
+        "Erro: O motorista informado não possui um conjunto titular vinculado."
+      );
+      return;
+    }
 
     // Validação: Impedir duplicidade de motorista no mesmo dia
     if (formData.dataHora && formData.motorista) {
@@ -359,11 +503,15 @@ Por favor, confirme o recebimento.`;
     if (window.confirm("Deseja finalizar esta viagem?")) {
       const viagem = escalas.find((item) => item.id === id);
 
-      setEscalas(
-        escalas.map((item) =>
-          item.id === id ? { ...item, status: "Finalizada" } : item
-        )
+      const novasEscalas = escalas.map((item) =>
+        item.id === id ? { ...item, status: "Finalizada" } : item
       );
+
+      setEscalas(novasEscalas);
+      // Atualiza localStorage imediatamente para evitar conflito com a Lista de Descarga
+      localStorage.setItem("escalas", JSON.stringify(novasEscalas));
+      // Garante que a viagem continue visível na tela
+      setHideFinalized(false);
 
       if (viagem) {
         // Adiciona automaticamente à Lista de Descarga
@@ -379,7 +527,7 @@ Por favor, confirme o recebimento.`;
           motorista: viagem.motorista,
           gestor: "",
           cliente: viagem.cliente,
-          status: "Aguardando", // Define status inicial ao retornar
+          status: "Disponível", // Define status inicial ao retornar
         };
 
         localStorage.setItem(
@@ -419,7 +567,7 @@ Por favor, confirme o recebimento.`;
             motorista: viagem.motorista,
             gestor: "",
             cliente: viagem.cliente,
-            status: "Aguardando",
+            status: "Disponível",
           });
           motoristasNaFila.add(viagem.motorista);
         }
@@ -504,25 +652,15 @@ Por favor, confirme o recebimento.`;
             <FaPlus /> Criar Novo Contrato
           </button>
           <button
-            className="btn-new-contract"
             onClick={handleSyncFinalized}
-            style={{
-              marginLeft: "10px",
-              backgroundColor: "#6f42c1",
-              color: "#fff",
-            }}
+            className="btn-new-contract btn-sync"
             title="Sincronizar Finalizadas com Lista de Descarga"
           >
             <FaFlagCheckered /> Sincronizar Finalizadas
           </button>
           <button
-            className="btn-new-contract"
             onClick={() => setShowArchived(!showArchived)}
-            style={{
-              marginLeft: "10px",
-              backgroundColor: "#17a2b8",
-              color: "#fff",
-            }}
+            className="btn-new-contract btn-archive"
             title="Ver Contratos Arquivados"
           >
             <FaArchive />{" "}
@@ -532,52 +670,19 @@ Por favor, confirme o recebimento.`;
 
         {/* Lista de Contratos Arquivados */}
         {showArchived && (
-          <div
-            style={{
-              marginBottom: "20px",
-              padding: "15px",
-              backgroundColor: "rgba(0, 0, 0, 0.2)",
-              borderRadius: "8px",
-              border: "1px solid #444",
-            }}
-          >
-            <h3
-              style={{ color: "#fff", marginBottom: "10px", fontSize: "1rem" }}
-            >
-              Contratos Arquivados
-            </h3>
+          <div className="archived-container">
+            <h3 className="archived-title">Contratos Arquivados</h3>
             {contratosArquivados.length === 0 ? (
-              <p style={{ color: "#ccc", fontSize: "0.9rem" }}>
-                Nenhum contrato arquivado.
-              </p>
+              <p className="archived-empty">Nenhum contrato arquivado.</p>
             ) : (
-              <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+              <div className="archived-list">
                 {contratosArquivados.map((c) => (
-                  <div
-                    key={c}
-                    style={{
-                      backgroundColor: "#333",
-                      padding: "8px 12px",
-                      borderRadius: "4px",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "10px",
-                      color: "#fff",
-                      border: "1px solid #555",
-                    }}
-                  >
+                  <div key={c} className="archived-item">
                     <span>{c}</span>
                     <button
                       onClick={() => handleRestoreContract(c)}
                       title="Restaurar Contrato"
-                      style={{
-                        background: "none",
-                        border: "none",
-                        color: "#05f26c",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
+                      className="btn-restore"
                     >
                       <FaUndo />
                     </button>
@@ -647,25 +752,13 @@ Por favor, confirme o recebimento.`;
 
         {/* Formulário de Escala */}
         <section className="escala-form-section">
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-start",
-            }}
-          >
+          <div className="form-header">
             <h2 style={{ flex: 1 }}>
               {editingId ? "Editar Escala" : "Nova Escala"}
             </h2>
             <button
               onClick={() => setIsFormExpanded(!isFormExpanded)}
-              style={{
-                background: "none",
-                border: "none",
-                color: "#fff",
-                cursor: "pointer",
-                fontSize: "1.2rem",
-              }}
+              className="btn-expand"
               title={isFormExpanded ? "Minimizar" : "Expandir"}
             >
               {isFormExpanded ? <FaChevronUp /> : <FaChevronDown />}
@@ -688,13 +781,7 @@ Por favor, confirme o recebimento.`;
                 </div>
               </div>
 
-              <div
-                style={{
-                  borderTop: "1px solid #eee",
-                  margin: "20px 0",
-                  paddingTop: "20px",
-                }}
-              ></div>
+              <div className="form-separator"></div>
 
               <div className="form-row">
                 <div className="form-group">
@@ -768,16 +855,40 @@ Por favor, confirme o recebimento.`;
               </div>
 
               <div className="form-row">
-                <div className="form-group">
+                <div className="form-group input-container-relative">
                   <label>Motorista</label>
                   <input
                     type="text"
                     name="motorista"
                     value={formData.motorista}
-                    onChange={handleInputChange}
+                    onChange={handleDriverChange}
+                    onFocus={() => setShowDriverSuggestions(true)}
+                    onBlur={() =>
+                      setTimeout(() => setShowDriverSuggestions(false), 200)
+                    }
                     required
                     placeholder="Nome do Motorista"
+                    autoComplete="off"
                   />
+                  {showDriverSuggestions && formData.motorista && (
+                    <ul className="autocomplete-list">
+                      {motoristasList
+                        .filter((m) =>
+                          m.nome
+                            .toLowerCase()
+                            .includes(formData.motorista.toLowerCase())
+                        )
+                        .map((m) => (
+                          <li
+                            key={m.id}
+                            onClick={() => handleDriverSelect(m)}
+                            className="autocomplete-item"
+                          >
+                            {m.nome}
+                          </li>
+                        ))}
+                    </ul>
+                  )}
                 </div>
                 <div className="form-group">
                   <label>WhatsApp / Telefone</label>
@@ -989,14 +1100,14 @@ Por favor, confirme o recebimento.`;
             </div>
             <div className="info-group">
               <label>Longitude</label>
-              <div style={{ display: "flex", gap: "5px" }}>
+              <div className="longitude-group">
                 <input
                   type="text"
                   name="longitude"
                   value={currentDetalhes.longitude || ""}
                   onChange={handleDetalheChange}
                   placeholder="Long"
-                  style={{ flex: 1 }}
+                  className="input-flex"
                 />
                 <button
                   type="button"
@@ -1013,14 +1124,7 @@ Por favor, confirme o recebimento.`;
                     }
                   }}
                   title="Abrir no Google Maps"
-                  style={{
-                    backgroundColor: "#05f26c",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                    padding: "0 10px",
-                    color: "#132426",
-                  }}
+                  className="btn-map"
                 >
                   <FaMapMarkerAlt />
                 </button>
@@ -1029,53 +1133,370 @@ Por favor, confirme o recebimento.`;
           </div>
         </section>
 
+        <div style={{ display: "flex", gap: "20px", flexWrap: "wrap", marginTop: "20px", alignItems: "flex-start" }}>
+        {/* Seção de Escala de Colheita */}
+        <section className="client-info-section" style={{ flex: 1, minWidth: "500px", marginTop: "0" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+            <h3 style={{ margin: 0 }}>Escala de Colheita (Máquinas e Operadores)</h3>
+            <button
+              onClick={() => setIsColheitaExpanded(!isColheitaExpanded)}
+              className="btn-expand"
+              style={{ background: "transparent", border: "none", color: "white", cursor: "pointer", fontSize: "1.2rem" }}
+              title={isColheitaExpanded ? "Minimizar" : "Expandir"}
+            >
+              {isColheitaExpanded ? <FaChevronUp /> : <FaChevronDown />}
+            </button>
+          </div>
+          {isColheitaExpanded && (
+            <div className="colheita-container">
+            <div className="form-row" style={{ alignItems: "flex-end" }}>
+              <div className="form-group">
+                <label>Máquina</label>
+                <input
+                  type="text"
+                  placeholder="Ex: Colheitadeira 01"
+                  value={novaMaquina.maquina}
+                  onChange={(e) =>
+                    setNovaMaquina({ ...novaMaquina, maquina: e.target.value })
+                  }
+                />
+              </div>
+              <div className="form-group">
+                <label>Hectares</label>
+                <input
+                  type="number"
+                  placeholder="Área (ha)"
+                  value={novaMaquina.hectares}
+                  onChange={(e) =>
+                    setNovaMaquina({ ...novaMaquina, hectares: e.target.value })
+                  }
+                />
+              </div>
+              <div className="form-group">
+                <label>Operador</label>
+                <input
+                  type="text"
+                  placeholder="Nome do Operador"
+                  value={novaMaquina.operador}
+                  onChange={(e) =>
+                    setNovaMaquina({ ...novaMaquina, operador: e.target.value })
+                  }
+                />
+              </div>
+              <div className="form-group">
+                <label>WhatsApp</label>
+                <input
+                  type="text"
+                  placeholder="(99) 99999-9999"
+                  value={novaMaquina.telefone}
+                  onChange={(e) => {
+                    let v = e.target.value.replace(/\D/g, "");
+                    v = v.substring(0, 11);
+                    if (v.length > 10) {
+                      v = v.replace(/^(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+                    } else if (v.length > 6) {
+                      v = v.replace(/^(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3");
+                    } else if (v.length > 2) {
+                      v = v.replace(/^(\d{2})(\d{0,5})/, "($1) $2");
+                    }
+                    setNovaMaquina({ ...novaMaquina, telefone: v });
+                  }}
+                />
+              </div>
+              <div className="form-group">
+                <button
+                  onClick={handleAddMaquina}
+                  className="btn-escalar"
+                  style={{ height: "42px", marginTop: "0" }}
+                >
+                  {editingMaquinaId ? <FaEdit /> : <FaPlus />}{" "}
+                  {editingMaquinaId ? "Salvar" : "Adicionar"}
+                </button>
+                {editingMaquinaId && (
+                  <button
+                    onClick={handleCancelEditMaquina}
+                    className="btn-cancel"
+                    style={{ height: "42px", marginTop: "0", marginLeft: "5px" }}
+                  >
+                    Cancelar
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="table-container" style={{ marginTop: "15px" }}>
+              <table className="escala-table">
+                <thead>
+                  <tr>
+                    <th>Máquina</th>
+                    <th>Hectares</th>
+                    <th>Operador</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(currentDetalhes.maquinas || []).length > 0 ? (
+                    currentDetalhes.maquinas.map((m) => (
+                      <tr key={m.id}>
+                        <td>{m.maquina}</td>
+                        <td>{m.hectares}</td>
+                        <td>{m.operador}</td>
+                        <td>
+                          <button
+                            className="action-btn btn-whatsapp"
+                            onClick={() => {
+                              const phone = m.telefone ? m.telefone.replace(/\D/g, "") : "";
+                              if (phone) {
+                                const text = `Olá ${m.operador}, segue sua escala de colheita:\nMáquina: ${m.maquina}\nÁrea: ${m.hectares} ha`;
+                                window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(text)}`, "_blank");
+                              }
+                              else alert("Telefone não cadastrado para este operador.");
+                            }}
+                            title="WhatsApp Operador"
+                          >
+                            <FaWhatsapp />
+                          </button>
+                          <button
+                            className="action-btn edit-btn"
+                            onClick={() => handleEditMaquina(m)}
+                            title="Editar"
+                          >
+                            <FaEdit />
+                          </button>
+                          <button
+                            className="action-btn delete-btn"
+                            onClick={() => handleRemoveMaquina(m.id)}
+                            title="Remover"
+                          >
+                            <FaTrash />
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="4" className="empty-table-cell">
+                        Nenhuma máquina escalada para colheita.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          )}
+        </section>
+
+        {/* Indicadores de Produtividade e Gráfico */}
+        <section className="client-info-section" style={{ flex: 1, minWidth: "500px", marginTop: "0" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+            <h3 style={{ margin: 0 }}>
+              <FaChartBar /> Indicadores de Produtividade
+            </h3>
+            <button
+              onClick={() => setIsProdutividadeExpanded(!isProdutividadeExpanded)}
+              className="btn-expand"
+              style={{ background: "transparent", border: "none", color: "white", cursor: "pointer", fontSize: "1.2rem" }}
+              title={isProdutividadeExpanded ? "Minimizar" : "Expandir"}
+            >
+              {isProdutividadeExpanded ? <FaChevronUp /> : <FaChevronDown />}
+            </button>
+          </div>
+          {isProdutividadeExpanded && (
+          <div
+            className="productivity-container"
+            style={{
+              display: "flex",
+              gap: "20px",
+              alignItems: "center",
+              flexWrap: "wrap",
+            }}
+          >
+            <div
+              className="stat-box"
+              style={{
+                background: "#e3f2fd",
+                padding: "15px",
+                borderRadius: "8px",
+                flex: "1",
+                minWidth: "150px",
+                textAlign: "center",
+              }}
+            >
+              <span
+                style={{
+                  display: "block",
+                  color: "#1565c0",
+                  marginBottom: "5px",
+                }}
+              >
+                Total Hectares
+              </span>
+              <strong style={{ fontSize: "1.5rem", color: "#0d47a1" }}>
+                {totalHectares} ha
+              </strong>
+            </div>
+            <div
+              className="stat-box"
+              style={{
+                background: "#e8f5e9",
+                padding: "15px",
+                borderRadius: "8px",
+                flex: "1",
+                minWidth: "150px",
+                textAlign: "center",
+              }}
+            >
+              <span
+                style={{
+                  display: "block",
+                  color: "#2e7d32",
+                  marginBottom: "5px",
+                }}
+              >
+                Cargas Realizadas
+              </span>
+              <strong style={{ fontSize: "1.5rem", color: "#1b5e20" }}>
+                {totalCargas}
+              </strong>
+            </div>
+            <div
+              className="stat-box"
+              style={{
+                background: "#fff3e0",
+                padding: "15px",
+                borderRadius: "8px",
+                flex: "1",
+                minWidth: "150px",
+                textAlign: "center",
+                border: "1px solid #ffe0b2",
+              }}
+            >
+              <span
+                style={{
+                  display: "block",
+                  color: "#ef6c00",
+                  marginBottom: "5px",
+                }}
+              >
+                Média ha/Carga
+              </span>
+              <strong style={{ fontSize: "1.5rem", color: "#e65100" }}>
+                {mediaHaPorCarga} ha
+              </strong>
+            </div>
+
+            {/* Mini Gráfico CSS */}
+            <div
+              className="mini-chart"
+              style={{
+                flex: "2",
+                minWidth: "300px",
+                height: "100px",
+                background: "#f9f9f9",
+                borderRadius: "8px",
+                padding: "10px 20px",
+                display: "flex",
+                alignItems: "flex-end",
+                justifyContent: "space-around",
+                border: "1px solid #eee",
+              }}
+            >
+              <div style={{ textAlign: "center", width: "30%" }}>
+                <div
+                  style={{
+                    height: totalHectares > 0 ? "60px" : "2px",
+                    background: "#1976d2",
+                    borderRadius: "4px 4px 0 0",
+                    transition: "height 0.5s",
+                  }}
+                ></div>
+                <small
+                  style={{
+                    display: "block",
+                    marginTop: "5px",
+                    fontSize: "0.8rem",
+                  }}
+                >
+                  Hectares
+                </small>
+              </div>
+              <div style={{ textAlign: "center", width: "30%" }}>
+                <div
+                  style={{
+                    height:
+                      totalCargas > 0
+                        ? `${Math.min(totalCargas * 5, 60)}px`
+                        : "2px",
+                    background: "#43a047",
+                    borderRadius: "4px 4px 0 0",
+                    transition: "height 0.5s",
+                  }}
+                ></div>
+                <small
+                  style={{
+                    display: "block",
+                    marginTop: "5px",
+                    fontSize: "0.8rem",
+                  }}
+                >
+                  Cargas
+                </small>
+              </div>
+              <div style={{ textAlign: "center", width: "30%" }}>
+                <div
+                  style={{
+                    height:
+                      parseFloat(mediaHaPorCarga) > 0
+                        ? `${Math.min(parseFloat(mediaHaPorCarga) * 10, 60)}px`
+                        : "2px",
+                    background: "#fb8c00",
+                    borderRadius: "4px 4px 0 0",
+                    transition: "height 0.5s",
+                  }}
+                ></div>
+                <small
+                  style={{
+                    display: "block",
+                    marginTop: "5px",
+                    fontSize: "0.8rem",
+                  }}
+                >
+                  Média
+                </small>
+              </div>
+            </div>
+          </div>
+          )}
+        </section>
+        </div>
+
         {/* Lista de Escalados */}
         <section className="escala-list-section">
           <h2>Escalas: {activeTab}</h2>
-          <div style={{ marginBottom: "20px", display: "flex", gap: "10px" }}>
+          <div className="filter-container">
             <input
               type="text"
               placeholder="Filtrar por Motorista ou Cliente..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              style={{
-                flex: 1,
-                padding: "10px",
-                border: "1px solid #ddd",
-                borderRadius: "4px",
-                fontSize: "14px",
-              }}
+              className="search-input"
             />
             <input
               type="date"
               value={filterDate}
               onChange={(e) => setFilterDate(e.target.value)}
               title="Filtrar por Data"
-              style={{
-                padding: "10px",
-                border: "1px solid #ddd",
-                borderRadius: "4px",
-                fontSize: "14px",
-              }}
+              className="date-filter-input"
             />
             <button
               onClick={() => setHideFinalized(!hideFinalized)}
               title={
                 hideFinalized ? "Mostrar Finalizadas" : "Ocultar Finalizadas"
               }
-              style={{
-                padding: "10px",
-                border: "1px solid #444",
-                borderRadius: "4px",
-                fontSize: "14px",
-                backgroundColor: hideFinalized ? "#1e3a3d" : "#05f26c",
-                color: hideFinalized ? "#fff" : "#132426",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                whiteSpace: "nowrap",
-              }}
+              className={`btn-toggle-finalized ${
+                hideFinalized ? "hidden" : "visible"
+              }`}
             >
               {hideFinalized ? <FaEyeSlash /> : <FaEye />}
               {hideFinalized ? "Ocultas" : "Visíveis"}
@@ -1176,7 +1597,7 @@ Por favor, confirme o recebimento.`;
                 ))}
                 {filteredEscalas.length === 0 && (
                   <tr>
-                    <td colSpan="10" style={{ textAlign: "center" }}>
+                    <td colSpan="10" className="empty-table-cell">
                       {escalas.length === 0
                         ? "Nenhuma escala registrada."
                         : "Nenhum registro encontrado."}
@@ -1190,28 +1611,10 @@ Por favor, confirme o recebimento.`;
 
         {/* Botão de Finalizar Contrato */}
         {activeTab && (
-          <div
-            style={{
-              marginTop: "20px",
-              display: "flex",
-              justifyContent: "flex-end",
-            }}
-          >
+          <div className="finalize-contract-container">
             <button
               onClick={handleFinalizeContract}
-              style={{
-                backgroundColor: "#dc3545",
-                color: "#fff",
-                padding: "12px 24px",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-                fontSize: "16px",
-                fontWeight: "bold",
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-              }}
+              className="btn-finalize-contract"
             >
               <FaFlagCheckered /> Contrato Finalizado
             </button>

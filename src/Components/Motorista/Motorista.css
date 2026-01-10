@@ -1,0 +1,343 @@
+.motorista-container {
+  padding: 20px;
+  color: #fff;
+  min-height: 100vh;
+}
+
+.motorista-header {
+  margin-bottom: 30px;
+  border-bottom: 1px solid #444;
+  padding-bottom: 10px;
+}
+
+.motorista-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.motorista-subtitle {
+  color: #ccc;
+  margin-top: 5px;
+}
+
+.controls-container {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.search-box {
+  position: relative;
+  flex: 1;
+  max-width: 400px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 10px 10px 35px;
+  border-radius: 4px;
+  border: 1px solid #444;
+  background-color: #1e3a3d;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.motorista-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #1e3a3d;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.motorista-thead {
+  background-color: #08401b;
+  color: #fff;
+}
+
+.motorista-th {
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.motorista-tr {
+  border-bottom: 1px solid #444;
+}
+
+.motorista-td {
+  padding: 15px;
+  vertical-align: middle;
+}
+
+.nome-text {
+  font-weight: bold;
+  font-size: 1.05em;
+}
+
+.btn-icon-whatsapp {
+  background: none;
+  border: none;
+  color: #25d366;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+}
+
+.badge-domingos {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  display: inline-block;
+  min-width: 30px;
+  text-align: center;
+}
+
+.badge-domingos.success {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.badge-domingos.danger {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.btn-folga {
+  background-color: #17a2b8;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.empty-message {
+  padding: 40px;
+  text-align: center;
+  color: #ccc;
+  font-size: 1.1em;
+}
+
+.edit-input {
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #444;
+  background-color: #132426;
+  color: #fff;
+  width: 100%;
+  max-width: 150px;
+}
+
+.actions-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-action {
+  border: none;
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transition: opacity 0.2s;
+}
+
+.btn-action:hover {
+  opacity: 0.8;
+}
+
+.btn-action.edit {
+  background-color: #ffc107;
+  color: #132426;
+}
+
+.btn-action.save {
+  background-color: #28a745;
+}
+
+.btn-action.cancel {
+  background-color: #dc3545;
+}
+
+.date-input-folga {
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #444;
+  background-color: #132426;
+  color: #fff;
+  max-width: 140px;
+}
+
+.folga-date-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-right: 8px;
+}
+
+.date-input-folga.small {
+  padding: 2px 4px;
+  font-size: 0.75rem;
+  max-width: 100px;
+  height: 24px;
+}
+
+.folga-range {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9em;
+  line-height: 1.2;
+}
+
+.folga-separator {
+  font-size: 0.8em;
+  color: #ccc;
+  margin: 2px 0;
+}
+
+.btn-action.history {
+  background-color: #17a2b8;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #132426;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  border: 1px solid #444;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #444;
+  padding-bottom: 10px;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #fff;
+}
+
+.modal-header button {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.history-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.history-list li {
+  padding: 10px;
+  border-bottom: 1px solid #333;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+}
+
+.history-list li:last-child {
+  border-bottom: none;
+}
+
+.em-folga-row {
+  background-color: rgba(111, 66, 193, 0.2); /* Destaque roxo suave */
+}
+
+.badge-alert {
+  background-color: #6f42c1;
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+  display: inline-block;
+  vertical-align: middle;
+  font-weight: bold;
+}
+
+.btn-export-report {
+  background-color: #08401b;
+  color: #05f26c;
+  border: 1px solid #05f26c;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.btn-export-report:hover {
+  background-color: #05f26c;
+  color: #08401b;
+}
+
+.celular-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.history-empty {
+  justify-content: center;
+  color: #ccc;
+}
+}
