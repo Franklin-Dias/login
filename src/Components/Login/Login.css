@@ -1,25 +1,31 @@
 .container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  place-items: stretch;
+  place-content: center;
+  width: 100%;
+  height: 100vh;
+  border: 1px solid rgba(3, 74, 166, 0.15);
+
+  background-color: rgba(191, 151, 101, 0.15);
+  backdrop-filter: blur(10px);
+  box-shadow: 2px 2px rgba(1, 28, 64, 0.2);
+ 
+}
+
+.form-container{
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 450px;
-  border: 1px solid rgba(3, 74, 166, 0.15);
-  border-radius: 8px;
-  background-color: rgba(191, 151, 101, 0.15);
-  backdrop-filter: blur(10px);
   padding: 40px;
-  box-shadow: 2px 2px rgba(1, 28, 64, 0.2);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 .container h1 {
   text-align: center;
   font-size: 30px;
-  color: #fff;
+  color: #000;
   margin-bottom: 20px;
 }
 
@@ -39,7 +45,7 @@
   border-radius: 8px;
   padding: 20px 45px;
   font-size: 16px;
-  color: #fff;
+  color: #000;
 }
 
 .input-field input::placeholder {
@@ -51,7 +57,7 @@
   top: 50%;
   transform: translateY(-50%);
   font-size: 16px;
-  color: #fff;
+  color: #000;
 }
 
 .container .recall-forget {
@@ -63,7 +69,7 @@
 }
 
 .recall-forget label {
-  color: #fff;
+  color: #000;
 }
 
 .recall-forget input {
@@ -72,7 +78,7 @@
 
 .recall-forget a,
 .signup-link p a {
-  color: #fff;
+  color: #000;
   text-decoration: none;
 }
 
@@ -90,7 +96,7 @@
   box-shadow: 0 0 10px rgba(1, 28, 64, 0.1);
   border: none;
   border-radius: 20px;
-  color: #fff;
+  color: #000;
   font-size: 16px;
   text-shadow: none;
   cursor: pointer;
@@ -106,7 +112,19 @@
 
 .container .signup-link {
   font-size: 15px;
-  color: #fff;
+  color: #000;
   text-align: center;
   margin: 20px 0 10px;
+}
+.background-image img {
+  width: 100%;
+  height: 100vh;
+  object-fit: cover;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+ 
+  
+
 }

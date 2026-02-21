@@ -2,6 +2,7 @@ import { FaUser, FaLock } from "react-icons/fa";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
+import img from "../../../public/caminhao.jpg";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -55,6 +56,9 @@ const Login = () => {
           </p>
         </div>
       </form>
+      <div className="background-image">
+        <img src={img} alt="Caminhão" />
+      </div>
     </div>
   );
 };
